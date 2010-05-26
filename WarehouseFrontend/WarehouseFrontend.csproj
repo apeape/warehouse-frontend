@@ -43,19 +43,19 @@
     <Reference Include="DevExpress.XtraLayout.v10.1, Version=10.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="Jayrock, Version=0.9.8316.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\warehouse\jayrock-0.9.8316-bin\bin\Debug\Jayrock.dll</HintPath>
+      <HintPath>include\Jayrock.dll</HintPath>
     </Reference>
-    <Reference Include="Jayrock.Json, Version=0.9.8316.0, Culture=neutral">
+    <Reference Include="Jayrock.Json, Version=0.9.8316.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\warehouse\jayrock-0.9.8316-bin\bin\Debug\Jayrock.Json.dll</HintPath>
+      <HintPath>include\Jayrock.Json.dll</HintPath>
     </Reference>
     <Reference Include="MoreLinq, Version=1.0.11729.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\warehouse\Dependencies\MoreLinq.dll</HintPath>
+      <HintPath>include\MoreLinq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\warehouse\Dependencies\Newtonsoft.Json.dll</HintPath>
+      <HintPath>include\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

@@ -22,32 +22,35 @@ namespace WarehouseFrontend
 
         public class SearchResultData
         {
-            public string name;
-            public string section;
-            public long size;
+            public string name { get; set; }
+            public string section { get; set; }
+            public long size { get; set; }
             [JsonConverter(typeof(IsoDateTimeConverter))]
-            public DateTime date;
-            public string site;
-            public int id;
-            public string sizeString;
+            public DateTime date { get; set; }
+            public string site { get; set; }
+            public int id { get; set; }
+            public string sizeString { get; set; }
         }
 
         public class SearchResult
         {
-            public string site;
-            public List<SearchResultData> results;
+            public string site { get; set; }
+            public List<SearchResultData> results { get; set; }
         }
 
         public class BytesTransferred
         {
-            public long Downloaded;
-            public long Uploaded;
+            public long downloaded { get; set; }
+            public long uploaded { get; set; }
+            //[JsonConverter(typeof(IsoDateTimeConverter))]
+            public double timestamp { get; set; }
+            public DateTime date { get; set; }
         }
 
         public class SiteStatistics
         {
-            public long releaseCount;
-            public long totalSize;
+            public long releaseCount { get; set; }
+            public long totalSize { get; set; }
         }
     }
 }

@@ -150,10 +150,7 @@ namespace WarehouseFrontend
 
         public WarehouseObject.BytesTransferred getBytesTransferred()
         {
-            JsonArray res = (JsonArray) client.Invoke("getBytesTransferred");
-            long downloaded = ((JsonNumber)res[0]).ToInt64();
-            long uploaded = ((JsonNumber)res[1]).ToInt64();
-            return new WarehouseObject.BytesTransferred { Downloaded = downloaded, Uploaded = uploaded };
+            return JsonConvert.DeserializeObject<WarehouseObject.BytesTransferred>(((JsonObject)client.Invoke("getBytesTransferred")).ToString());
         }
 
         public bool IsAdministrator()

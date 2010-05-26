@@ -25,7 +25,6 @@ namespace WarehouseFrontend
     {
         private JsonRpcProxy warehouse;
         private WarehouseObject.BytesTransferred previousXfer;
-        private DateTime previousXferTime;
 
         public bool closed = false;
 
@@ -106,23 +105,22 @@ namespace WarehouseFrontend
             new Thread(delegate() // new thread
                 {
                     var xfer = warehouse.getBytesTransferred();
+                    xfer.date = Util.UnixTimeStampToDateTime(xfer.timestamp);
                     if (previousXfer != null)
                     {
-                        var timeNow = DateTime.Now;
+                        var elapsed = xfer.timestamp - previousXfer.timestamp;
 
-                        var elapsed = timeNow - previousXferTime;
+                        var downloaded = xfer.downloaded - previousXfer.downloaded;
+                        var uploaded = xfer.uploaded - previousXfer.uploaded;
 
-                        var downloaded = xfer.Downloaded - previousXfer.Downloaded;
-                        var uploaded = xfer.Uploaded - previousXfer.Uploaded;
-
-                        var dlSpeed = (downloaded / 1024) / elapsed.TotalSeconds; // kibibytes/sec
-                        var ulSpeed = (uploaded / 1024) / elapsed.TotalSeconds; // kibibytes/sec
+                        var dlSpeed = (downloaded / 1024) / elapsed; // kibibytes/sec
+                        var ulSpeed = (uploaded / 1024) / elapsed; // kibibytes/sec
 
 
-                        dlChart.Enqueue(new bwChartValue() { speed = dlSpeed * 0.008192, time = timeNow }); // megabits/sec
+                        dlChart.Enqueue(new bwChartValue() { speed = dlSpeed * 0.008192, time = xfer.date }); // megabits/sec
                         if (dlChart.Count > 25)
                             dlChart.Dequeue();
-                        ulChart.Enqueue(new bwChartValue() { speed = ulSpeed * 0.008192, time = timeNow }); // megabits/sec
+                        ulChart.Enqueue(new bwChartValue() { speed = ulSpeed * 0.008192, time = xfer.date }); // megabits/sec
                         if (ulChart.Count > 25)
                             ulChart.Dequeue();
 
@@ -145,7 +143,6 @@ namespace WarehouseFrontend
                             });
                         }
                     }
-                    previousXferTime = DateTime.Now;
                     previousXfer = xfer;
                 }).Start();
         }
