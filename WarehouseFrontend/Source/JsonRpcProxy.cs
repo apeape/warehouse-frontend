@@ -172,7 +172,7 @@ namespace WarehouseFrontend
 
         public List<WarehouseObject.SearchResult> Search(string regEx)
         {
-            return JsonConvert.DeserializeObject<List<WarehouseObject.SearchResult>>(((JsonArray)client.Invoke("serialisableSearch", regEx)).ToString());
+            return JsonConvert.DeserializeObject<List<WarehouseObject.SearchResult>>(((JsonArray)client.Invoke("search", regEx)).ToString());
         }
     }
 }
