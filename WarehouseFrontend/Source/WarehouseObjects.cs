@@ -38,13 +38,6 @@ namespace WarehouseFrontend
             public List<SearchResultData> results;
         }
 
-        public class SearchResultOld
-        {
-            List<SearchResultData> SceneAccess;
-            List<SearchResultData> TorrentVault;
-            List<SearchResultData> TorrentLeech;
-        }
-
         public class BytesTransferred
         {
             public long Downloaded;
