@@ -68,6 +68,7 @@
             this.selected = new DevExpress.XtraGrid.Columns.GridColumn();
             this.filter = new DevExpress.XtraGrid.Columns.GridColumn();
             this.category = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.type = new DevExpress.XtraGrid.Columns.GridColumn();
             this.statsTabPage = new DevExpress.XtraTab.XtraTabPage();
             this.bwChartControl = new DevExpress.XtraCharts.ChartControl();
             this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
@@ -363,7 +364,8 @@
             this.gridViewFilters.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.selected,
             this.filter,
-            this.category});
+            this.category,
+            this.type});
             this.gridViewFilters.GridControl = this.filtersGridControl;
             this.gridViewFilters.Name = "gridViewFilters";
             this.gridViewFilters.OptionsView.ShowGroupPanel = false;
@@ -400,6 +402,14 @@
             this.category.Visible = true;
             this.category.VisibleIndex = 2;
             this.category.Width = 102;
+            // 
+            // type
+            // 
+            this.type.Caption = "type";
+            this.type.FieldName = "type";
+            this.type.Name = "type";
+            this.type.Visible = true;
+            this.type.VisibleIndex = 3;
             // 
             // statsTabPage
             // 
@@ -703,6 +713,7 @@
         private DevExpress.XtraEditors.ComboBoxEdit searchsite;
         private DevExpress.XtraEditors.ComboBoxEdit filterType;
         private DevExpress.XtraGrid.Columns.GridColumn site;
+        private DevExpress.XtraGrid.Columns.GridColumn type;
     }
 }
 

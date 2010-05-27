@@ -18,6 +18,9 @@ namespace WarehouseFrontend
 
             [JsonConverter(typeof(StringEnumConverter))]
             public FilterType release_filter_type { get; set; }
+
+            public bool selected { get; set; }
+            public string type { get; set; }
         }
 
         public class SearchResultData

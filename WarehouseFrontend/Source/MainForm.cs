@@ -42,6 +42,9 @@ namespace WarehouseFrontend
             InitializeComponent();
             Win32.AllocConsole();
 
+            Console.Title = "warehouse console";
+            Console.WindowHeight = 15;
+
             foreach (string ft in Enum.GetNames(typeof(WarehouseObject.FilterType)))
             {
                 filterType.Properties.Items.Add(ft);
@@ -184,6 +187,9 @@ namespace WarehouseFrontend
                     {
                         var filters = warehouse.ListFilters();
 
+                        foreach (var f in filters)
+                            f.type = Enum.GetName(typeof(WarehouseObject.FilterType), f.release_filter_type);
+
                         if (!closed && filters.Count > 0)
                         {
                             this.BeginInvoke((ThreadStart)delegate() // back to UI thread
@@ -203,6 +209,9 @@ namespace WarehouseFrontend
 
         private void deletefilters_Click(object sender, EventArgs e)
         {
+            //DataRowView rowView = (DataRowView)gridViewSearch.GetRow(e.RowHandle);
+            ///var rows2 = gridViewFilters.get
+
             var rows = (filtersGridControl.DataSource as DataTable).Rows;
             List<int> indices = new List<int>();
             foreach (DataRow row in rows)
