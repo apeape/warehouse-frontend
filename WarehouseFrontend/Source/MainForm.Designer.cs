@@ -33,6 +33,8 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
             DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
             DevExpress.XtraCharts.PointSeriesLabel pointSeriesLabel1 = new DevExpress.XtraCharts.PointSeriesLabel();
@@ -42,7 +44,7 @@
             DevExpress.XtraCharts.SplineAreaSeriesView splineAreaSeriesView2 = new DevExpress.XtraCharts.SplineAreaSeriesView();
             DevExpress.XtraCharts.PointSeriesLabel pointSeriesLabel3 = new DevExpress.XtraCharts.PointSeriesLabel();
             DevExpress.XtraCharts.SplineAreaSeriesView splineAreaSeriesView3 = new DevExpress.XtraCharts.SplineAreaSeriesView();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             this.searchtabpage = new DevExpress.XtraTab.XtraTabPage();
@@ -59,6 +61,7 @@
             this.site = new DevExpress.XtraGrid.Columns.GridColumn();
             this.id = new DevExpress.XtraGrid.Columns.GridColumn();
             this.filterstabpage = new DevExpress.XtraTab.XtraTabPage();
+            this.assigncategory = new DevExpress.XtraEditors.ButtonEdit();
             this.filterType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.refreshfilters = new DevExpress.XtraEditors.SimpleButton();
             this.addfilter = new DevExpress.XtraEditors.ButtonEdit();
@@ -86,6 +89,17 @@
             this.label2 = new System.Windows.Forms.Label();
             this.freespace = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.rtorrentTabPage = new DevExpress.XtraTab.XtraTabPage();
+            this.hidecompleted = new DevExpress.XtraEditors.CheckEdit();
+            this.refreshTorrents = new DevExpress.XtraEditors.SimpleButton();
+            this.torrentsGridControl = new DevExpress.XtraGrid.GridControl();
+            this.gridViewRtorrent = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.torrentName = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.downloadSpeed = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.uploadSpeed = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.fileCount = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.torrentSize = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.percentDone = new DevExpress.XtraGrid.Columns.GridColumn();
             this.defaultLookAndFeel1 = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
             this.bwtimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
@@ -97,6 +111,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.searchResultsGridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewSearch)).BeginInit();
             this.filterstabpage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.assigncategory.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.filterType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.addfilter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.filtersGridControl)).BeginInit();
@@ -119,6 +134,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.rtorrentTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hidecompleted.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.torrentsGridControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewRtorrent)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControl1
@@ -137,7 +156,8 @@
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.searchtabpage,
             this.filterstabpage,
-            this.statsTabPage});
+            this.statsTabPage,
+            this.rtorrentTabPage});
             // 
             // searchtabpage
             // 
@@ -224,6 +244,7 @@
             this.gridViewSearch.Name = "gridViewSearch";
             this.gridViewSearch.OptionsView.ShowGroupPanel = false;
             this.gridViewSearch.RowClick += new DevExpress.XtraGrid.Views.Grid.RowClickEventHandler(this.gridViewSearch_RowClick);
+            this.gridViewSearch.CustomColumnSort += new DevExpress.XtraGrid.Views.Base.CustomColumnSortEventHandler(this.gridViewSearch_CustomColumnSort);
             // 
             // name
             // 
@@ -254,6 +275,7 @@
             this.size.Name = "size";
             this.size.OptionsColumn.AllowEdit = false;
             this.size.OptionsColumn.ReadOnly = true;
+            this.size.SortMode = DevExpress.XtraGrid.ColumnSortMode.Custom;
             this.size.Visible = true;
             this.size.VisibleIndex = 2;
             this.size.Width = 55;
@@ -293,6 +315,7 @@
             // 
             // filterstabpage
             // 
+            this.filterstabpage.Controls.Add(this.assigncategory);
             this.filterstabpage.Controls.Add(this.filterType);
             this.filterstabpage.Controls.Add(this.refreshfilters);
             this.filterstabpage.Controls.Add(this.addfilter);
@@ -303,10 +326,21 @@
             this.filterstabpage.Size = new System.Drawing.Size(477, 380);
             this.filterstabpage.Text = "filters";
             // 
+            // assigncategory
+            // 
+            this.assigncategory.Location = new System.Drawing.Point(99, 354);
+            this.assigncategory.Name = "assigncategory";
+            this.assigncategory.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "assign category to selected", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject4, "", null, null, true),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "delete category", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, "", null, null, true)});
+            this.assigncategory.Size = new System.Drawing.Size(375, 20);
+            this.assigncategory.TabIndex = 5;
+            this.assigncategory.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.assigncategory_ButtonClick);
+            // 
             // filterType
             // 
             this.filterType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.filterType.Location = new System.Drawing.Point(157, 357);
+            this.filterType.Location = new System.Drawing.Point(74, 328);
             this.filterType.Name = "filterType";
             this.filterType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -317,7 +351,7 @@
             // refreshfilters
             // 
             this.refreshfilters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.refreshfilters.Location = new System.Drawing.Point(100, 354);
+            this.refreshfilters.Location = new System.Drawing.Point(2, 326);
             this.refreshfilters.Name = "refreshfilters";
             this.refreshfilters.Size = new System.Drawing.Size(51, 23);
             this.refreshfilters.TabIndex = 3;
@@ -328,18 +362,18 @@
             // 
             this.addfilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.addfilter.Location = new System.Drawing.Point(263, 357);
+            this.addfilter.Location = new System.Drawing.Point(178, 328);
             this.addfilter.Name = "addfilter";
             this.addfilter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus, "add filter", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleRight, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject4, "", null, null, true)});
-            this.addfilter.Size = new System.Drawing.Size(211, 20);
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus, "add filter", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleRight, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject6, "", null, null, true)});
+            this.addfilter.Size = new System.Drawing.Size(296, 20);
             this.addfilter.TabIndex = 2;
             this.addfilter.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.addfilter_ButtonClick);
             // 
             // deletefilters
             // 
             this.deletefilters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.deletefilters.Location = new System.Drawing.Point(3, 354);
+            this.deletefilters.Location = new System.Drawing.Point(2, 353);
             this.deletefilters.Name = "deletefilters";
             this.deletefilters.Size = new System.Drawing.Size(91, 23);
             this.deletefilters.TabIndex = 1;
@@ -354,7 +388,7 @@
             this.filtersGridControl.Location = new System.Drawing.Point(2, 2);
             this.filtersGridControl.MainView = this.gridViewFilters;
             this.filtersGridControl.Name = "filtersGridControl";
-            this.filtersGridControl.Size = new System.Drawing.Size(473, 349);
+            this.filtersGridControl.Size = new System.Drawing.Size(473, 319);
             this.filtersGridControl.TabIndex = 0;
             this.filtersGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewFilters});
@@ -408,6 +442,8 @@
             this.type.Caption = "type";
             this.type.FieldName = "type";
             this.type.Name = "type";
+            this.type.OptionsColumn.AllowEdit = false;
+            this.type.OptionsColumn.ReadOnly = true;
             this.type.Visible = true;
             this.type.VisibleIndex = 3;
             // 
@@ -533,7 +569,7 @@
             this.getSiteStatsButton.Name = "getSiteStatsButton";
             this.getSiteStatsButton.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "get stats", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, "", null, null, true)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "get stats", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject7, "", null, null, true)});
             this.getSiteStatsButton.Size = new System.Drawing.Size(199, 20);
             this.getSiteStatsButton.TabIndex = 1;
             this.getSiteStatsButton.TabStop = false;
@@ -613,6 +649,130 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "free space:";
             // 
+            // rtorrentTabPage
+            // 
+            this.rtorrentTabPage.Controls.Add(this.hidecompleted);
+            this.rtorrentTabPage.Controls.Add(this.refreshTorrents);
+            this.rtorrentTabPage.Controls.Add(this.torrentsGridControl);
+            this.rtorrentTabPage.Image = global::WarehouseFrontend.Properties.Resources.lorry;
+            this.rtorrentTabPage.Name = "rtorrentTabPage";
+            this.rtorrentTabPage.Size = new System.Drawing.Size(477, 380);
+            this.rtorrentTabPage.Text = "rtorrent";
+            // 
+            // hidecompleted
+            // 
+            this.hidecompleted.EditValue = true;
+            this.hidecompleted.Location = new System.Drawing.Point(3, 357);
+            this.hidecompleted.Name = "hidecompleted";
+            this.hidecompleted.Properties.Caption = "hide completed";
+            this.hidecompleted.Size = new System.Drawing.Size(101, 19);
+            this.hidecompleted.TabIndex = 2;
+            this.hidecompleted.CheckedChanged += new System.EventHandler(this.hidecompleted_CheckedChanged);
+            // 
+            // refreshTorrents
+            // 
+            this.refreshTorrents.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.refreshTorrents.Location = new System.Drawing.Point(400, 354);
+            this.refreshTorrents.Name = "refreshTorrents";
+            this.refreshTorrents.Size = new System.Drawing.Size(75, 23);
+            this.refreshTorrents.TabIndex = 1;
+            this.refreshTorrents.Text = "refresh";
+            this.refreshTorrents.Click += new System.EventHandler(this.refreshTorrents_Click);
+            // 
+            // torrentsGridControl
+            // 
+            this.torrentsGridControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.torrentsGridControl.Location = new System.Drawing.Point(2, 2);
+            this.torrentsGridControl.MainView = this.gridViewRtorrent;
+            this.torrentsGridControl.Name = "torrentsGridControl";
+            this.torrentsGridControl.Size = new System.Drawing.Size(473, 349);
+            this.torrentsGridControl.TabIndex = 0;
+            this.torrentsGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridViewRtorrent});
+            // 
+            // gridViewRtorrent
+            // 
+            this.gridViewRtorrent.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.torrentName,
+            this.downloadSpeed,
+            this.uploadSpeed,
+            this.fileCount,
+            this.torrentSize,
+            this.percentDone});
+            this.gridViewRtorrent.GridControl = this.torrentsGridControl;
+            this.gridViewRtorrent.Name = "gridViewRtorrent";
+            this.gridViewRtorrent.OptionsView.ShowGroupPanel = false;
+            this.gridViewRtorrent.CustomColumnSort += new DevExpress.XtraGrid.Views.Base.CustomColumnSortEventHandler(this.gridViewRtorrent_CustomColumnSort);
+            // 
+            // torrentName
+            // 
+            this.torrentName.Caption = "name";
+            this.torrentName.FieldName = "name";
+            this.torrentName.Name = "torrentName";
+            this.torrentName.OptionsColumn.AllowEdit = false;
+            this.torrentName.OptionsColumn.ReadOnly = true;
+            this.torrentName.Visible = true;
+            this.torrentName.VisibleIndex = 0;
+            this.torrentName.Width = 153;
+            // 
+            // downloadSpeed
+            // 
+            this.downloadSpeed.Caption = "dl (KiB/s)";
+            this.downloadSpeed.FieldName = "downloadSpeedKiB";
+            this.downloadSpeed.Name = "downloadSpeed";
+            this.downloadSpeed.OptionsColumn.AllowEdit = false;
+            this.downloadSpeed.OptionsColumn.ReadOnly = true;
+            this.downloadSpeed.Visible = true;
+            this.downloadSpeed.VisibleIndex = 1;
+            this.downloadSpeed.Width = 68;
+            // 
+            // uploadSpeed
+            // 
+            this.uploadSpeed.Caption = "ul (KiB/s)";
+            this.uploadSpeed.FieldName = "uploadSpeedKiB";
+            this.uploadSpeed.Name = "uploadSpeed";
+            this.uploadSpeed.OptionsColumn.AllowEdit = false;
+            this.uploadSpeed.OptionsColumn.ReadOnly = true;
+            this.uploadSpeed.Visible = true;
+            this.uploadSpeed.VisibleIndex = 2;
+            this.uploadSpeed.Width = 66;
+            // 
+            // fileCount
+            // 
+            this.fileCount.Caption = "files";
+            this.fileCount.FieldName = "fileCount";
+            this.fileCount.Name = "fileCount";
+            this.fileCount.OptionsColumn.AllowEdit = false;
+            this.fileCount.OptionsColumn.ReadOnly = true;
+            this.fileCount.Visible = true;
+            this.fileCount.VisibleIndex = 3;
+            this.fileCount.Width = 52;
+            // 
+            // torrentSize
+            // 
+            this.torrentSize.Caption = "size";
+            this.torrentSize.FieldName = "sizeString";
+            this.torrentSize.Name = "torrentSize";
+            this.torrentSize.OptionsColumn.AllowEdit = false;
+            this.torrentSize.OptionsColumn.ReadOnly = true;
+            this.torrentSize.SortMode = DevExpress.XtraGrid.ColumnSortMode.Custom;
+            this.torrentSize.Visible = true;
+            this.torrentSize.VisibleIndex = 4;
+            // 
+            // percentDone
+            // 
+            this.percentDone.Caption = "%";
+            this.percentDone.FieldName = "percentDone";
+            this.percentDone.Name = "percentDone";
+            this.percentDone.OptionsColumn.AllowEdit = false;
+            this.percentDone.OptionsColumn.FixedWidth = true;
+            this.percentDone.OptionsColumn.ReadOnly = true;
+            this.percentDone.Visible = true;
+            this.percentDone.VisibleIndex = 5;
+            this.percentDone.Width = 38;
+            // 
             // bwtimer
             // 
             this.bwtimer.Interval = 2000;
@@ -640,6 +800,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.searchResultsGridControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewSearch)).EndInit();
             this.filterstabpage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.assigncategory.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.filterType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.addfilter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.filtersGridControl)).EndInit();
@@ -664,6 +825,10 @@
             this.panelControl1.ResumeLayout(false);
             this.panelControl1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.rtorrentTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.hidecompleted.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.torrentsGridControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewRtorrent)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -714,6 +879,18 @@
         private DevExpress.XtraEditors.ComboBoxEdit filterType;
         private DevExpress.XtraGrid.Columns.GridColumn site;
         private DevExpress.XtraGrid.Columns.GridColumn type;
+        private DevExpress.XtraTab.XtraTabPage rtorrentTabPage;
+        private DevExpress.XtraGrid.GridControl torrentsGridControl;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridViewRtorrent;
+        private DevExpress.XtraGrid.Columns.GridColumn torrentName;
+        private DevExpress.XtraGrid.Columns.GridColumn downloadSpeed;
+        private DevExpress.XtraGrid.Columns.GridColumn uploadSpeed;
+        private DevExpress.XtraGrid.Columns.GridColumn fileCount;
+        private DevExpress.XtraGrid.Columns.GridColumn torrentSize;
+        private DevExpress.XtraGrid.Columns.GridColumn percentDone;
+        private DevExpress.XtraEditors.SimpleButton refreshTorrents;
+        private DevExpress.XtraEditors.ButtonEdit assigncategory;
+        private DevExpress.XtraEditors.CheckEdit hidecompleted;
     }
 }
 

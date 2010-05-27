@@ -93,6 +93,8 @@ namespace WarehouseFrontend
                             }
 
                             listFilters();
+
+                            getTorrents(hidecompleted.Checked);
                         }
                     }).Start();
             }
@@ -206,12 +208,8 @@ namespace WarehouseFrontend
                 }).Start();
         }
 
-
-        private void deletefilters_Click(object sender, EventArgs e)
+        private List<int> getSelectedFilterIndices()
         {
-            //DataRowView rowView = (DataRowView)gridViewSearch.GetRow(e.RowHandle);
-            ///var rows2 = gridViewFilters.get
-
             var rows = (filtersGridControl.DataSource as DataTable).Rows;
             List<int> indices = new List<int>();
             foreach (DataRow row in rows)
@@ -222,6 +220,14 @@ namespace WarehouseFrontend
                     indices.Add(index);
                 }
             }
+
+            return indices;
+        }
+
+        private void deletefilters_Click(object sender, EventArgs e)
+        {
+            List<int> indices = getSelectedFilterIndices();
+
             var res = MessageBox.Show("really delete " + indices.Count + " filter(s)?", "hey", MessageBoxButtons.YesNo);
             if (res == DialogResult.Yes)
             {
@@ -324,6 +330,114 @@ namespace WarehouseFrontend
             var site = rowView.Row.ItemArray[4].ToString();
             downloadbyid.Text = id;
             searchsite.SelectedIndex = searchsite.Properties.Items.IndexOf(site);
+        }
+
+        private void getTorrents(bool hideComplete)
+        {
+            new Thread(delegate() // new thread
+            {
+                try
+                {
+                    var torrents = warehouse.GetTorrents();
+
+                    Console.WriteLine("got " + torrents.Count + " torrents");
+
+                    foreach (var f in torrents)
+                    {
+                        f.percentDone = (f.bytesDone / f.size) * 100;
+                        f.downloadSpeedKiB = f.downloadSpeed / 1024;
+                        f.uploadSpeedKiB = f.uploadSpeed / 1024;
+                        f.sizeString = Util.FormatBytes(f.size);
+                        //f.type = Enum.GetName(typeof(WarehouseObject.FilterType), f.release_filter_type);
+                    }
+
+                    if (hideComplete)
+                    {
+                        Console.WriteLine("hiding " + torrents.Count(q => q.percentDone == 100) + " completed torrents");
+                        torrents.RemoveAll(q => q.percentDone == 100);
+                    }
+
+                    if (!closed && torrents.Count > 0)
+                    {
+                        this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                        {
+                            torrentsGridControl.DataSource = torrents.ToDataTable();
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.InnerException);
+                }
+            }).Start();
+        }
+
+        private void refreshTorrents_Click(object sender, EventArgs e)
+        {
+            getTorrents(hidecompleted.Checked);
+        }
+
+        private void gridViewRtorrent_CustomColumnSort(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnSortEventArgs e)
+        {
+            try
+            {
+                if (e.Column.Name == "torrentSize")
+                {
+                    DataRowView dr1 = (gridViewRtorrent.DataSource as DataView)[e.ListSourceRowIndex1];
+                    DataRowView dr2 = (gridViewRtorrent.DataSource as DataView)[e.ListSourceRowIndex2];
+                    e.Handled = true;
+                    e.Result = System.Collections.Comparer.Default.Compare(dr1["size"],
+                        dr2["size"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void gridViewSearch_CustomColumnSort(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnSortEventArgs e)
+        {
+            try
+            {
+                if (e.Column.Name == "size")
+                {
+                    DataRowView dr1 = (gridViewSearch.DataSource as DataView)[e.ListSourceRowIndex1];
+                    DataRowView dr2 = (gridViewSearch.DataSource as DataView)[e.ListSourceRowIndex2];
+                    e.Handled = true;
+                    e.Result = System.Collections.Comparer.Default.Compare(dr1["size"],
+                        dr2["size"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void assigncategory_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            string category = assigncategory.Text;
+            if (category == null || category.Length == 0) return;
+
+            new Thread(delegate() // new thread
+                {
+                    if (e.Button.Caption.Contains("delete"))
+                    {
+                        warehouse.DeleteCategory(category);
+                    }
+                    else // assign category to selected
+                    {
+                        List<int> indices = getSelectedFilterIndices();
+                        warehouse.AssignCategoryToFilters(category, indices);
+                    }
+                }).Start();
+        }
+
+        private void hidecompleted_CheckedChanged(object sender, EventArgs e)
+        {
+            getTorrents(hidecompleted.Checked);
         }
     }
 }

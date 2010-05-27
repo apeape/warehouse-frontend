@@ -171,5 +171,10 @@ namespace WarehouseFrontend
         {
             return JsonConvert.DeserializeObject<List<WarehouseObject.SearchResult>>(((JsonArray)client.Invoke("search", regEx)).ToString());
         }
+
+        public List<WarehouseObject.TorrentStatus> GetTorrents()
+        {
+            return JsonConvert.DeserializeObject<List<WarehouseObject.TorrentStatus>>(((JsonArray)client.Invoke("getTorrents")).ToString());
+        }
     }
 }

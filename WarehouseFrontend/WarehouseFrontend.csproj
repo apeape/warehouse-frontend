@@ -121,6 +121,7 @@
     <Content Include="Resources\TabIcons\bullet_feed.png" />
     <Content Include="Resources\TabIcons\chart_curve.png" />
     <Content Include="Resources\TabIcons\find.png" />
+    <None Include="Resources\TabIcons\lorry.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

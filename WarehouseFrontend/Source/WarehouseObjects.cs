@@ -55,5 +55,21 @@ namespace WarehouseFrontend
             public long releaseCount { get; set; }
             public long totalSize { get; set; }
         }
+
+        public class TorrentStatus
+        {
+            public string infoHash { get; set; }
+            public string name { get; set; }
+            public long downloadSpeed { get; set; }
+            public long uploadSpeed { get; set; }
+            public int fileCount { get; set; }
+            public long size { get; set; }
+            public long bytesDone { get; set; }
+
+            public Decimal percentDone { get; set; }
+            public string sizeString { get; set; }
+            public float downloadSpeedKiB { get; set; }
+            public float uploadSpeedKiB { get; set; }
+        }
     }
 }

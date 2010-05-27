@@ -88,6 +88,13 @@ namespace WarehouseFrontend.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap lorry {
+            get {
+                object obj = ResourceManager.GetObject("lorry", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Scale {
             get {
                 object obj = ResourceManager.GetObject("Scale", resourceCulture);
