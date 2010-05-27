@@ -189,6 +189,8 @@ namespace WarehouseFrontend
                     {
                         var filters = warehouse.ListFilters();
 
+                        Console.WriteLine("got " + filters.Count + " filter(s)");
+
                         foreach (var f in filters)
                             f.type = Enum.GetName(typeof(WarehouseObject.FilterType), f.release_filter_type);
 
@@ -423,14 +425,22 @@ namespace WarehouseFrontend
 
             new Thread(delegate() // new thread
                 {
-                    if (e.Button.Caption.Contains("delete"))
+                    try
                     {
-                        warehouse.DeleteCategory(category);
+                        if (e.Button.Caption.Contains("delete"))
+                        {
+                            warehouse.DeleteCategory(category);
+                        }
+                        else // assign category to selected
+                        {
+                            List<int> indices = getSelectedFilterIndices();
+                            warehouse.AssignCategoryToFilters(category, indices);
+                        }
+                        listFilters();
                     }
-                    else // assign category to selected
+                    catch (Exception ex)
                     {
-                        List<int> indices = getSelectedFilterIndices();
-                        warehouse.AssignCategoryToFilters(category, indices);
+                        Console.WriteLine(ex.Message);
                     }
                 }).Start();
         }
