@@ -32,7 +32,8 @@ namespace WarehouseFrontend
             public DateTime date { get; set; }
             public string site { get; set; }
             public int id { get; set; }
-            public string sizeString { get; set; }
+
+            public string sizeString { get { return Util.FormatBytes(size); } }
         }
 
         public class SearchResult
@@ -66,10 +67,10 @@ namespace WarehouseFrontend
             public long size { get; set; }
             public long bytesDone { get; set; }
 
-            public Decimal percentDone { get; set; }
-            public string sizeString { get; set; }
-            public float downloadSpeedKiB { get; set; }
-            public float uploadSpeedKiB { get; set; }
+            public Decimal percentDone { get { return (bytesDone / size) * 100; } }
+            public string sizeString { get { return Util.FormatBytes(size); } }
+            public float downloadSpeedKiB { get { return downloadSpeed / 1024; } }
+            public float uploadSpeedKiB { get { return uploadSpeed / 1024; } }
         }
     }
 }

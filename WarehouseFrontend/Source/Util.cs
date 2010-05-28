@@ -49,7 +49,7 @@ namespace WarehouseFrontend
                     else
                     {
                         Thread.Sleep(retryTimeout);
-                        Console.WriteLine("retrying " + action.Method.Name.ToString());
+                        //Console.WriteLine("retrying " + action.Method.Name.ToString());
                     }
                 }
             } while (numRetries-- > 0);

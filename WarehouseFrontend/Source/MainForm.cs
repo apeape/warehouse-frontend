@@ -307,7 +307,7 @@ namespace WarehouseFrontend
                     foreach (var r in sr.results)
                     {
                         r.site = sr.site;
-                        r.sizeString = Util.FormatBytes(r.size);
+                        //r.sizeString = Util.FormatBytes(r.size);
                     }
                 }
                 this.BeginInvoke((ThreadStart)delegate() // back to UI thread
@@ -344,14 +344,14 @@ namespace WarehouseFrontend
 
                     Console.WriteLine("got " + torrents.Count + " torrents");
 
+                    /*
                     foreach (var f in torrents)
                     {
                         f.percentDone = (f.bytesDone / f.size) * 100;
                         f.downloadSpeedKiB = f.downloadSpeed / 1024;
                         f.uploadSpeedKiB = f.uploadSpeed / 1024;
                         f.sizeString = Util.FormatBytes(f.size);
-                        //f.type = Enum.GetName(typeof(WarehouseObject.FilterType), f.release_filter_type);
-                    }
+                    }*/
 
                     if (hideComplete)
                     {
