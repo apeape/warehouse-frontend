@@ -23,6 +23,7 @@ namespace WarehouseFrontend
 {
     public partial class MainForm : Form
     {
+        private bool bwTimerLock = false;
         private JsonRpcProxy warehouse;
         private WarehouseObject.BytesTransferred previousXfer;
 
@@ -105,7 +106,8 @@ namespace WarehouseFrontend
 
         private void bwtimer_Tick(object sender, EventArgs e)
         {
-            bwtimer.Stop(); // shitty mutex-like system to stop more than 1 update from going at a time
+            if (bwTimerLock == true) return; // shitty mutex-like system to stop more than 1 update from going at a time
+            bwTimerLock = true;
             new Thread(delegate() // new thread
                 {
                     if (!SafetyWrapper(() =>
@@ -145,18 +147,18 @@ namespace WarehouseFrontend
                                         bwChartControl.Series["download"].ValueDataMembers.AddRange(new string[] { "speed" });
 
                                         bwChartControl.Series["upload"].ArgumentDataMember = "time";
-                                        bwChartControl.Series["upload"].ValueDataMembers.AddRange(new string[] { "speed" });
-
-                                        bwtimer.Start();
+                                        bwChartControl.Series["upload"].ValueDataMembers.AddRange(new string[] { "speed" });                                     
                                     });
                                 }
                             }
                             previousXfer = xfer;
+                            bwTimerLock = false;
                         }))
                     {
                         // exception, stop the timer
                         this.BeginInvoke((ThreadStart)delegate() // back to UI thread
                         {
+                            Console.WriteLine("stopping bw update timer");
                             if (!closed) bwtimer.Stop();
                         });
                     }
@@ -173,21 +175,21 @@ namespace WarehouseFrontend
         {
             if (e.Button.Caption.Contains("stats"))
             {
-            new Thread(delegate() // new thread
-                {
-                    SafetyWrapper(() =>
-                        {
-                            var stats = warehouse.GetSiteStatistics(getSiteStatsButton.Text);
-                            if (!closed && stats != null)
+                new Thread(delegate() // new thread
+                    {
+                        SafetyWrapper(() =>
                             {
-                                this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                var stats = warehouse.GetSiteStatistics(getSiteStatsButton.Text);
+                                if (!closed && stats != null)
                                 {
-                                    rlscount.Text = stats.releaseCount.ToString();
-                                    totalsize.Text = Util.FormatBytes(stats.totalSize);
-                                });
-                            }
-                        });
-                }).Start();
+                                    this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                    {
+                                        rlscount.Text = stats.releaseCount.ToString();
+                                        totalsize.Text = Util.FormatBytes(stats.totalSize);
+                                    });
+                                }
+                            });
+                    }).Start();
             }
         }
 
