@@ -51,7 +51,7 @@ namespace WarehouseFrontend
                 filterType.SelectedIndex = 0;
             }
 
-            try
+            SafetyWrapper(() =>
             {
                 string url = File.ReadAllText("JsonRpcServiceUrl.txt");
                 warehouse = new JsonRpcProxy(url, "ssl.pfx");
@@ -61,94 +61,106 @@ namespace WarehouseFrontend
 
                 new Thread(delegate() // new thread
                     {
-                        warehouse.siteNames = warehouse.GetSiteNames();
-
-                        if (warehouse.siteNames.Count > 0)
+                        SafetyWrapper(() =>
                         {
-                            Console.WriteLine("got " + warehouse.siteNames.Count + " sites");
+                            warehouse.siteNames = warehouse.GetSiteNames();
 
-                            if (!closed)
+                            if (warehouse.siteNames.Count > 0)
                             {
-                                this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                Console.WriteLine("got " + warehouse.siteNames.Count + " sites");
+
+                                if (!closed)
                                 {
-                                    foreach (string site in warehouse.siteNames)
+                                    this.BeginInvoke((ThreadStart)delegate() // back to UI thread
                                     {
-                                        getSiteStatsButton.Properties.Items.Add(site);
-                                        searchsite.Properties.Items.Add(site);
-                                    }
-                                    getSiteStatsButton.SelectedIndex = 0;
-                                    searchsite.SelectedIndex = 0;
-                                });
-                            }
+                                        foreach (string site in warehouse.siteNames)
+                                        {
+                                            getSiteStatsButton.Properties.Items.Add(site);
+                                            searchsite.Properties.Items.Add(site);
+                                        }
+                                        getSiteStatsButton.SelectedIndex = 0;
+                                        searchsite.SelectedIndex = 0;
+                                    });
+                                }
 
-                            var space = warehouse.GetFreeSpace();
+                                var space = warehouse.GetFreeSpace();
 
-                            if (!closed)
-                            {
-                                this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                if (!closed)
                                 {
-                                    freespace.Text = Util.FormatBytes(space);
-                                    bwtimer.Start();
-                                });
+                                    this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                    {
+                                        freespace.Text = Util.FormatBytes(space);
+                                        bwtimer.Start();
+                                    });
+                                }
+
+                                listFilters();
+
+                                getTorrents(hidecompleted.Checked);
                             }
-
-                            listFilters();
-
-                            getTorrents(hidecompleted.Checked);
-                        }
+                        });
                     }).Start();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.InnerException);
-            }
+            });
         }
 
         private void bwtimer_Tick(object sender, EventArgs e)
         {
+            bwtimer.Stop(); // shitty mutex-like system to stop more than 1 update from going at a time
             new Thread(delegate() // new thread
                 {
-                    var xfer = warehouse.getBytesTransferred();
-                    xfer.date = Util.UnixTimeStampToDateTime(xfer.timestamp);
-                    if (previousXfer != null)
-                    {
-                        var elapsed = xfer.timestamp - previousXfer.timestamp;
-
-                        var downloaded = xfer.downloaded - previousXfer.downloaded;
-                        var uploaded = xfer.uploaded - previousXfer.uploaded;
-
-                        var dlSpeed = (downloaded / 1024) / elapsed; // kibibytes/sec
-                        var ulSpeed = (uploaded / 1024) / elapsed; // kibibytes/sec
-
-
-                        dlChart.Enqueue(new bwChartValue() { speed = dlSpeed * 0.008192, time = xfer.date }); // megabits/sec
-                        if (dlChart.Count > 25)
-                            dlChart.Dequeue();
-                        ulChart.Enqueue(new bwChartValue() { speed = ulSpeed * 0.008192, time = xfer.date }); // megabits/sec
-                        if (ulChart.Count > 25)
-                            ulChart.Dequeue();
-
-                        if (!closed)
+                    if (!SafetyWrapper(() =>
                         {
-                            this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                            var xfer = warehouse.getBytesTransferred();
+                            xfer.date = Util.UnixTimeStampToDateTime(xfer.timestamp);
+                            if (previousXfer != null)
                             {
-                                dlspeed.Text = String.Format("{0:0.0} KiB/s", dlSpeed);
-                                ulspeed.Text = String.Format("{0:0.0} KiB/s", ulSpeed);
+                                var elapsed = xfer.timestamp - previousXfer.timestamp;
 
-                                bwChartControl.Series["download"].DataSource = dlChart.ToDataTable();
-                                bwChartControl.Series["upload"].DataSource = ulChart.ToDataTable();
+                                var downloaded = xfer.downloaded - previousXfer.downloaded;
+                                var uploaded = xfer.uploaded - previousXfer.uploaded;
 
-                                // Specify data members to bind the series.
-                                bwChartControl.Series["download"].ArgumentDataMember = "time";
-                                bwChartControl.Series["download"].ValueDataMembers.AddRange(new string[] { "speed" });
+                                var dlSpeed = (downloaded / 1024) / elapsed; // kibibytes/sec
+                                var ulSpeed = (uploaded / 1024) / elapsed; // kibibytes/sec
 
-                                bwChartControl.Series["upload"].ArgumentDataMember = "time";
-                                bwChartControl.Series["upload"].ValueDataMembers.AddRange(new string[] { "speed" });
-                            });
-                        }
+
+                                dlChart.Enqueue(new bwChartValue() { speed = dlSpeed * 0.008192, time = xfer.date }); // megabits/sec
+                                if (dlChart.Count > 25)
+                                    dlChart.Dequeue();
+                                ulChart.Enqueue(new bwChartValue() { speed = ulSpeed * 0.008192, time = xfer.date }); // megabits/sec
+                                if (ulChart.Count > 25)
+                                    ulChart.Dequeue();
+
+                                if (!closed)
+                                {
+                                    this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                    {
+                                        dlspeed.Text = String.Format("{0:0.0} KiB/s", dlSpeed);
+                                        ulspeed.Text = String.Format("{0:0.0} KiB/s", ulSpeed);
+
+                                        bwChartControl.Series["download"].DataSource = dlChart.ToDataTable();
+                                        bwChartControl.Series["upload"].DataSource = ulChart.ToDataTable();
+
+                                        // Specify data members to bind the series.
+                                        bwChartControl.Series["download"].ArgumentDataMember = "time";
+                                        bwChartControl.Series["download"].ValueDataMembers.AddRange(new string[] { "speed" });
+
+                                        bwChartControl.Series["upload"].ArgumentDataMember = "time";
+                                        bwChartControl.Series["upload"].ValueDataMembers.AddRange(new string[] { "speed" });
+
+                                        bwtimer.Start();
+                                    });
+                                }
+                            }
+                            previousXfer = xfer;
+                        }))
+                    {
+                        // exception, stop the timer
+                        this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                        {
+                            if (!closed) bwtimer.Stop();
+                        });
                     }
-                    previousXfer = xfer;
+
                 }).Start();
         }
 
@@ -163,15 +175,18 @@ namespace WarehouseFrontend
             {
             new Thread(delegate() // new thread
                 {
-                    var stats = warehouse.GetSiteStatistics(getSiteStatsButton.Text);
-                    if (!closed && stats != null)
-                    {
-                        this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                    SafetyWrapper(() =>
                         {
-                            rlscount.Text = stats.releaseCount.ToString();
-                            totalsize.Text = Util.FormatBytes(stats.totalSize);
+                            var stats = warehouse.GetSiteStatistics(getSiteStatsButton.Text);
+                            if (!closed && stats != null)
+                            {
+                                this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                {
+                                    rlscount.Text = stats.releaseCount.ToString();
+                                    totalsize.Text = Util.FormatBytes(stats.totalSize);
+                                });
+                            }
                         });
-                    }
                 }).Start();
             }
         }
@@ -185,28 +200,23 @@ namespace WarehouseFrontend
         {
             new Thread(delegate() // new thread
                 {
-                    try
-                    {
-                        var filters = warehouse.ListFilters();
-
-                        Console.WriteLine("got " + filters.Count + " filter(s)");
-
-                        foreach (var f in filters)
-                            f.type = Enum.GetName(typeof(WarehouseObject.FilterType), f.release_filter_type);
-
-                        if (!closed && filters.Count > 0)
+                    SafetyWrapper(() =>
                         {
-                            this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                            var filters = warehouse.ListFilters();
+
+                            Console.WriteLine("got " + filters.Count + " filter(s)");
+
+                            foreach (var f in filters)
+                                f.type = Enum.GetName(typeof(WarehouseObject.FilterType), f.release_filter_type);
+
+                            if (!closed && filters.Count > 0)
                             {
-                                filtersGridControl.DataSource = filters.ToDataTable();
-                            });
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                        Console.WriteLine(e.InnerException);
-                    }
+                                this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                {
+                                    filtersGridControl.DataSource = filters.ToDataTable();
+                                });
+                            }
+                        });
                 }).Start();
         }
 
@@ -338,7 +348,7 @@ namespace WarehouseFrontend
         {
             new Thread(delegate() // new thread
             {
-                try
+                SafetyWrapper(() =>
                 {
                     var torrents = warehouse.GetTorrents();
 
@@ -366,12 +376,7 @@ namespace WarehouseFrontend
                             torrentsGridControl.DataSource = torrents.ToDataTable();
                         });
                     }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e.InnerException);
-                }
+                });
             }).Start();
         }
 
@@ -382,7 +387,7 @@ namespace WarehouseFrontend
 
         private void gridViewRtorrent_CustomColumnSort(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnSortEventArgs e)
         {
-            try
+            SafetyWrapper(() =>
             {
                 if (e.Column.Name == "torrentSize")
                 {
@@ -392,16 +397,12 @@ namespace WarehouseFrontend
                     e.Result = System.Collections.Comparer.Default.Compare(dr1["size"],
                         dr2["size"]);
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            });
         }
 
         private void gridViewSearch_CustomColumnSort(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnSortEventArgs e)
         {
-            try
+            SafetyWrapper(() =>
             {
                 if (e.Column.Name == "size")
                 {
@@ -411,11 +412,7 @@ namespace WarehouseFrontend
                     e.Result = System.Collections.Comparer.Default.Compare(dr1["size"],
                         dr2["size"]);
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            });
         }
 
         private void assigncategory_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
@@ -425,29 +422,40 @@ namespace WarehouseFrontend
 
             new Thread(delegate() // new thread
                 {
-                    try
-                    {
-                        if (e.Button.Caption.Contains("delete"))
+                    SafetyWrapper(() =>
                         {
-                            warehouse.DeleteCategory(category);
-                        }
-                        else // assign category to selected
-                        {
-                            List<int> indices = getSelectedFilterIndices();
-                            warehouse.AssignCategoryToFilters(category, indices);
-                        }
-                        listFilters();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+                            if (e.Button.Caption.Contains("delete"))
+                            {
+                                warehouse.DeleteCategory(category);
+                            }
+                            else // assign category to selected
+                            {
+                                List<int> indices = getSelectedFilterIndices();
+                                warehouse.AssignCategoryToFilters(category, indices);
+                            }
+                            listFilters();
+                        });
                 }).Start();
         }
 
         private void hidecompleted_CheckedChanged(object sender, EventArgs e)
         {
             getTorrents(hidecompleted.Checked);
+        }
+
+        private bool SafetyWrapper(Action action)
+        {
+            try
+            {
+                action();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(action.Method.Name + "() failed");
+                Console.WriteLine(e);
+                return false;
+            }
         }
     }
 }
