@@ -661,6 +661,7 @@
             // 
             // hidecompleted
             // 
+            this.hidecompleted.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.hidecompleted.EditValue = true;
             this.hidecompleted.Location = new System.Drawing.Point(3, 357);
             this.hidecompleted.Name = "hidecompleted";
