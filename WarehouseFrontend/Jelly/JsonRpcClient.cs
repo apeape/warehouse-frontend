@@ -30,6 +30,7 @@ namespace Jelly
     using System.Text;
     using System.Web.Services.Protocols;
     using Jayrock.Json;
+    using WarehouseFrontend;
 
     #endregion
 
@@ -39,41 +40,46 @@ namespace Jelly
 
         public virtual object Invoke(string method, params object[] args)
         {
-            WebRequest request = GetWebRequest(new Uri(Url));
-            request.Method = "POST";
-            
-            using (Stream stream = request.GetRequestStream())
-            using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
-            {
-                JsonObject call = new JsonObject();
-                call["id"] = ++_id;
-                call["method"] = method;
-                call["params"] = args;
-                call.Export(new JsonTextWriter(writer));
-            }
-            
-            using (HttpWebResponse response = (HttpWebResponse)GetWebResponse(request))
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                JsonObject answer = new JsonObject();
-
-                if (response.StatusCode != HttpStatusCode.OK)
+            return Util.RetryAction<object>(() =>
                 {
-                    Console.WriteLine("Bad HTTP response: " + response.StatusCode);
-                }
-                else
-                {
-                    answer.Import(new JsonTextReader(reader));
-                }
+                    WebRequest request = GetWebRequest(new Uri(Url));
+                    request.Method = "POST";
 
-                object errorObject = answer["error"];
-            
-                if (errorObject != null)
-                    OnError(errorObject);
-            
-                return answer["result"];
-            }
+                    using (Stream stream = request.GetRequestStream())
+                    using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                    {
+                        JsonObject call = new JsonObject();
+                        call["id"] = ++_id;
+                        call["method"] = method;
+                        call["params"] = args;
+                        call.Export(new JsonTextWriter(writer));
+                    }
+
+                    using (HttpWebResponse response = (HttpWebResponse)GetWebResponse(request))
+                    using (Stream stream = response.GetResponseStream())
+                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                    {
+                        JsonObject answer = new JsonObject();
+
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            throw new Exception(method + "() got Bad HTTP response: " + response.StatusCode);
+                        }
+                        else
+                        {
+                            answer.Import(new JsonTextReader(reader));
+                        }
+
+                        object errorObject = answer["error"];
+
+                        if (errorObject != null)
+                            OnError(errorObject);
+
+                        return answer["result"];
+                    }
+                }, 20, 100); // retry with delay
+
+            throw new Exception(method + "() failed, too many retries");
         }
 
         protected virtual void OnError(object errorObject) 

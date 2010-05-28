@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace WarehouseFrontend
 {
@@ -29,6 +30,31 @@ namespace WarehouseFrontend
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
+        }
+
+        /// <summary>
+        ///  RetryAction( () => SomeFunctionThatCanFail(), numRetries, timeOut );
+        /// </summary>
+        public static TResult RetryAction<TResult>(Func<TResult> action, int numRetries, int retryTimeout)
+        {
+            if (action == null)
+                throw new ArgumentNullException("action"); // slightly safer...
+
+            do
+            {
+                try { return action(); }
+                catch
+                {
+                    if (numRetries <= 0) throw;  // improved to avoid silent failure
+                    else
+                    {
+                        Thread.Sleep(retryTimeout);
+                        Console.WriteLine("retrying " + action.Method.Name.ToString());
+                    }
+                }
+            } while (numRetries-- > 0);
+
+            return default(TResult);
         }
     }
 }
