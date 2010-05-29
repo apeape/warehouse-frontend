@@ -71,6 +71,7 @@ namespace WarehouseFrontend
             public string sizeString { get { return Util.FormatBytes(size); } }
             public double downloadSpeedKiB { get { return Math.Round((double)downloadSpeed / 1024, 0); } }
             public double uploadSpeedKiB { get { return Math.Round((double)uploadSpeed / 1024, 0); } }
+            public TimeSpan timeLeft { get { return downloadSpeed == 0 ? TimeSpan.Zero : TimeSpan.FromSeconds(bytesDone / downloadSpeed);} }
         }
     }
 }

@@ -100,6 +100,7 @@
             this.fileCount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.torrentSize = new DevExpress.XtraGrid.Columns.GridColumn();
             this.percentDone = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.timeLeft = new DevExpress.XtraGrid.Columns.GridColumn();
             this.defaultLookAndFeel1 = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
             this.bwtimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
@@ -151,7 +152,7 @@
             this.xtraTabControl1.Location = new System.Drawing.Point(4, 4);
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.SelectedTabPage = this.searchtabpage;
-            this.xtraTabControl1.Size = new System.Drawing.Size(484, 411);
+            this.xtraTabControl1.Size = new System.Drawing.Size(510, 411);
             this.xtraTabControl1.TabIndex = 0;
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.searchtabpage,
@@ -168,7 +169,7 @@
             this.searchtabpage.Controls.Add(this.searchResultsGridControl);
             this.searchtabpage.Image = global::WarehouseFrontend.Properties.Resources.find;
             this.searchtabpage.Name = "searchtabpage";
-            this.searchtabpage.Size = new System.Drawing.Size(477, 380);
+            this.searchtabpage.Size = new System.Drawing.Size(503, 380);
             this.searchtabpage.Text = "search";
             // 
             // searchsite
@@ -199,7 +200,7 @@
             this.searchButton.Name = "searchButton";
             this.searchButton.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "search", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.Default, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, "", null, null, true)});
-            this.searchButton.Size = new System.Drawing.Size(472, 20);
+            this.searchButton.Size = new System.Drawing.Size(498, 20);
             this.searchButton.TabIndex = 3;
             this.searchButton.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.searchButton_ButtonClick);
             // 
@@ -214,7 +215,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "dl by id", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.Default, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject2, "", null, null, true),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "dl by name", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject3, "", null, null, true)});
             this.downloadbyid.Properties.Mask.BeepOnError = true;
-            this.downloadbyid.Size = new System.Drawing.Size(314, 20);
+            this.downloadbyid.Size = new System.Drawing.Size(340, 20);
             this.downloadbyid.TabIndex = 2;
             this.downloadbyid.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.downloadbyid_ButtonClick);
             // 
@@ -226,7 +227,7 @@
             this.searchResultsGridControl.Location = new System.Drawing.Point(2, 2);
             this.searchResultsGridControl.MainView = this.gridViewSearch;
             this.searchResultsGridControl.Name = "searchResultsGridControl";
-            this.searchResultsGridControl.Size = new System.Drawing.Size(473, 332);
+            this.searchResultsGridControl.Size = new System.Drawing.Size(499, 332);
             this.searchResultsGridControl.TabIndex = 0;
             this.searchResultsGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewSearch});
@@ -656,7 +657,7 @@
             this.rtorrentTabPage.Controls.Add(this.torrentsGridControl);
             this.rtorrentTabPage.Image = global::WarehouseFrontend.Properties.Resources.lorry;
             this.rtorrentTabPage.Name = "rtorrentTabPage";
-            this.rtorrentTabPage.Size = new System.Drawing.Size(477, 380);
+            this.rtorrentTabPage.Size = new System.Drawing.Size(503, 380);
             this.rtorrentTabPage.Text = "rtorrent";
             // 
             // hidecompleted
@@ -673,7 +674,7 @@
             // refreshTorrents
             // 
             this.refreshTorrents.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.refreshTorrents.Location = new System.Drawing.Point(400, 354);
+            this.refreshTorrents.Location = new System.Drawing.Point(426, 354);
             this.refreshTorrents.Name = "refreshTorrents";
             this.refreshTorrents.Size = new System.Drawing.Size(75, 23);
             this.refreshTorrents.TabIndex = 1;
@@ -688,7 +689,7 @@
             this.torrentsGridControl.Location = new System.Drawing.Point(2, 2);
             this.torrentsGridControl.MainView = this.gridViewRtorrent;
             this.torrentsGridControl.Name = "torrentsGridControl";
-            this.torrentsGridControl.Size = new System.Drawing.Size(473, 349);
+            this.torrentsGridControl.Size = new System.Drawing.Size(499, 349);
             this.torrentsGridControl.TabIndex = 0;
             this.torrentsGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewRtorrent});
@@ -701,7 +702,8 @@
             this.uploadSpeed,
             this.fileCount,
             this.torrentSize,
-            this.percentDone});
+            this.percentDone,
+            this.timeLeft});
             this.gridViewRtorrent.GridControl = this.torrentsGridControl;
             this.gridViewRtorrent.Name = "gridViewRtorrent";
             this.gridViewRtorrent.OptionsView.ShowGroupPanel = false;
@@ -775,6 +777,16 @@
             this.percentDone.VisibleIndex = 5;
             this.percentDone.Width = 45;
             // 
+            // timeLeft
+            // 
+            this.timeLeft.Caption = "eta";
+            this.timeLeft.FieldName = "timeLeft";
+            this.timeLeft.Name = "timeLeft";
+            this.timeLeft.OptionsColumn.AllowEdit = false;
+            this.timeLeft.OptionsColumn.ReadOnly = true;
+            this.timeLeft.Visible = true;
+            this.timeLeft.VisibleIndex = 6;
+            // 
             // bwtimer
             // 
             this.bwtimer.Interval = 2000;
@@ -784,7 +796,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(490, 416);
+            this.ClientSize = new System.Drawing.Size(516, 416);
             this.Controls.Add(this.xtraTabControl1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -893,6 +905,7 @@
         private DevExpress.XtraEditors.SimpleButton refreshTorrents;
         private DevExpress.XtraEditors.ButtonEdit assigncategory;
         private DevExpress.XtraEditors.CheckEdit hidecompleted;
+        private DevExpress.XtraGrid.Columns.GridColumn timeLeft;
     }
 }
 
