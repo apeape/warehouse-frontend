@@ -30,6 +30,7 @@ namespace WarehouseFrontend
             public long size { get; set; }
             [JsonConverter(typeof(IsoDateTimeConverter))]
             public DateTime date { get; set; }
+            public int seederCount { get; set; }
             public string site { get; set; }
             public int id { get; set; }
 

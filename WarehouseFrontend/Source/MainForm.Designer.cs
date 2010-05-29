@@ -58,6 +58,7 @@
             this.section = new DevExpress.XtraGrid.Columns.GridColumn();
             this.size = new DevExpress.XtraGrid.Columns.GridColumn();
             this.date = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.seeds = new DevExpress.XtraGrid.Columns.GridColumn();
             this.site = new DevExpress.XtraGrid.Columns.GridColumn();
             this.id = new DevExpress.XtraGrid.Columns.GridColumn();
             this.filterstabpage = new DevExpress.XtraTab.XtraTabPage();
@@ -239,6 +240,7 @@
             this.section,
             this.size,
             this.date,
+            this.seeds,
             this.site,
             this.id});
             this.gridViewSearch.GridControl = this.searchResultsGridControl;
@@ -256,7 +258,7 @@
             this.name.OptionsColumn.ReadOnly = true;
             this.name.Visible = true;
             this.name.VisibleIndex = 0;
-            this.name.Width = 144;
+            this.name.Width = 131;
             // 
             // section
             // 
@@ -267,7 +269,7 @@
             this.section.OptionsColumn.ReadOnly = true;
             this.section.Visible = true;
             this.section.VisibleIndex = 1;
-            this.section.Width = 45;
+            this.section.Width = 41;
             // 
             // size
             // 
@@ -279,7 +281,7 @@
             this.size.SortMode = DevExpress.XtraGrid.ColumnSortMode.Custom;
             this.size.Visible = true;
             this.size.VisibleIndex = 2;
-            this.size.Width = 55;
+            this.size.Width = 50;
             // 
             // date
             // 
@@ -290,7 +292,19 @@
             this.date.OptionsColumn.ReadOnly = true;
             this.date.Visible = true;
             this.date.VisibleIndex = 3;
-            this.date.Width = 89;
+            this.date.Width = 72;
+            // 
+            // seeds
+            // 
+            this.seeds.Caption = "seeds";
+            this.seeds.FieldName = "seederCount";
+            this.seeds.Name = "seeds";
+            this.seeds.OptionsColumn.AllowEdit = false;
+            this.seeds.OptionsColumn.FixedWidth = true;
+            this.seeds.OptionsColumn.ReadOnly = true;
+            this.seeds.Visible = true;
+            this.seeds.VisibleIndex = 4;
+            this.seeds.Width = 55;
             // 
             // site
             // 
@@ -300,8 +314,8 @@
             this.site.OptionsColumn.AllowEdit = false;
             this.site.OptionsColumn.ReadOnly = true;
             this.site.Visible = true;
-            this.site.VisibleIndex = 4;
-            this.site.Width = 65;
+            this.site.VisibleIndex = 5;
+            this.site.Width = 68;
             // 
             // id
             // 
@@ -311,8 +325,8 @@
             this.id.OptionsColumn.AllowEdit = false;
             this.id.OptionsColumn.ReadOnly = true;
             this.id.Visible = true;
-            this.id.VisibleIndex = 5;
-            this.id.Width = 49;
+            this.id.VisibleIndex = 6;
+            this.id.Width = 61;
             // 
             // filterstabpage
             // 
@@ -910,6 +924,7 @@
         private DevExpress.XtraEditors.ButtonEdit assigncategory;
         private DevExpress.XtraEditors.CheckEdit hidecompleted;
         private DevExpress.XtraGrid.Columns.GridColumn timeLeft;
+        private DevExpress.XtraGrid.Columns.GridColumn seeds;
     }
 }
 
