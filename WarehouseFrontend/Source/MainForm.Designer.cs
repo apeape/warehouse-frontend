@@ -716,7 +716,7 @@
             this.torrentName.OptionsColumn.ReadOnly = true;
             this.torrentName.Visible = true;
             this.torrentName.VisibleIndex = 0;
-            this.torrentName.Width = 153;
+            this.torrentName.Width = 151;
             // 
             // downloadSpeed
             // 
@@ -727,7 +727,7 @@
             this.downloadSpeed.OptionsColumn.ReadOnly = true;
             this.downloadSpeed.Visible = true;
             this.downloadSpeed.VisibleIndex = 1;
-            this.downloadSpeed.Width = 68;
+            this.downloadSpeed.Width = 70;
             // 
             // uploadSpeed
             // 
@@ -738,7 +738,7 @@
             this.uploadSpeed.OptionsColumn.ReadOnly = true;
             this.uploadSpeed.Visible = true;
             this.uploadSpeed.VisibleIndex = 2;
-            this.uploadSpeed.Width = 66;
+            this.uploadSpeed.Width = 67;
             // 
             // fileCount
             // 
@@ -749,7 +749,7 @@
             this.fileCount.OptionsColumn.ReadOnly = true;
             this.fileCount.Visible = true;
             this.fileCount.VisibleIndex = 3;
-            this.fileCount.Width = 52;
+            this.fileCount.Width = 43;
             // 
             // torrentSize
             // 
@@ -761,6 +761,7 @@
             this.torrentSize.SortMode = DevExpress.XtraGrid.ColumnSortMode.Custom;
             this.torrentSize.Visible = true;
             this.torrentSize.VisibleIndex = 4;
+            this.torrentSize.Width = 76;
             // 
             // percentDone
             // 
@@ -772,7 +773,7 @@
             this.percentDone.OptionsColumn.ReadOnly = true;
             this.percentDone.Visible = true;
             this.percentDone.VisibleIndex = 5;
-            this.percentDone.Width = 38;
+            this.percentDone.Width = 45;
             // 
             // bwtimer
             // 

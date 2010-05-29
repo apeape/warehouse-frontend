@@ -67,10 +67,10 @@ namespace WarehouseFrontend
             public long size { get; set; }
             public long bytesDone { get; set; }
 
-            public Decimal percentDone { get { return (bytesDone / size) * 100; } }
+            public double percentDone { get { return Math.Round(((double)bytesDone / (double)size) * 100, 1); } }
             public string sizeString { get { return Util.FormatBytes(size); } }
-            public float downloadSpeedKiB { get { return downloadSpeed / 1024; } }
-            public float uploadSpeedKiB { get { return uploadSpeed / 1024; } }
+            public double downloadSpeedKiB { get { return Math.Round((double)downloadSpeed / 1024, 0); } }
+            public double uploadSpeedKiB { get { return Math.Round((double)uploadSpeed / 1024, 0); } }
         }
     }
 }
