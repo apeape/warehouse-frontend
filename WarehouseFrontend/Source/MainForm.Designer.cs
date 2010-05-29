@@ -324,7 +324,7 @@
             this.filterstabpage.Controls.Add(this.filtersGridControl);
             this.filterstabpage.Image = global::WarehouseFrontend.Properties.Resources.bullet_feed;
             this.filterstabpage.Name = "filterstabpage";
-            this.filterstabpage.Size = new System.Drawing.Size(477, 380);
+            this.filterstabpage.Size = new System.Drawing.Size(503, 380);
             this.filterstabpage.Text = "filters";
             // 
             // assigncategory
@@ -455,7 +455,7 @@
             this.statsTabPage.Controls.Add(this.panelControl1);
             this.statsTabPage.Image = global::WarehouseFrontend.Properties.Resources.chart_curve;
             this.statsTabPage.Name = "statsTabPage";
-            this.statsTabPage.Size = new System.Drawing.Size(477, 380);
+            this.statsTabPage.Size = new System.Drawing.Size(503, 380);
             this.statsTabPage.Text = "status";
             // 
             // bwChartControl
@@ -718,7 +718,7 @@
             this.torrentName.OptionsColumn.ReadOnly = true;
             this.torrentName.Visible = true;
             this.torrentName.VisibleIndex = 0;
-            this.torrentName.Width = 151;
+            this.torrentName.Width = 135;
             // 
             // downloadSpeed
             // 
@@ -729,7 +729,7 @@
             this.downloadSpeed.OptionsColumn.ReadOnly = true;
             this.downloadSpeed.Visible = true;
             this.downloadSpeed.VisibleIndex = 1;
-            this.downloadSpeed.Width = 70;
+            this.downloadSpeed.Width = 62;
             // 
             // uploadSpeed
             // 
@@ -740,7 +740,7 @@
             this.uploadSpeed.OptionsColumn.ReadOnly = true;
             this.uploadSpeed.Visible = true;
             this.uploadSpeed.VisibleIndex = 2;
-            this.uploadSpeed.Width = 67;
+            this.uploadSpeed.Width = 60;
             // 
             // fileCount
             // 
@@ -751,7 +751,7 @@
             this.fileCount.OptionsColumn.ReadOnly = true;
             this.fileCount.Visible = true;
             this.fileCount.VisibleIndex = 3;
-            this.fileCount.Width = 43;
+            this.fileCount.Width = 38;
             // 
             // torrentSize
             // 
@@ -763,7 +763,7 @@
             this.torrentSize.SortMode = DevExpress.XtraGrid.ColumnSortMode.Custom;
             this.torrentSize.Visible = true;
             this.torrentSize.VisibleIndex = 4;
-            this.torrentSize.Width = 76;
+            this.torrentSize.Width = 70;
             // 
             // percentDone
             // 
@@ -775,7 +775,7 @@
             this.percentDone.OptionsColumn.ReadOnly = true;
             this.percentDone.Visible = true;
             this.percentDone.VisibleIndex = 5;
-            this.percentDone.Width = 45;
+            this.percentDone.Width = 42;
             // 
             // timeLeft
             // 
@@ -783,9 +783,11 @@
             this.timeLeft.FieldName = "timeLeft";
             this.timeLeft.Name = "timeLeft";
             this.timeLeft.OptionsColumn.AllowEdit = false;
+            this.timeLeft.OptionsColumn.FixedWidth = true;
             this.timeLeft.OptionsColumn.ReadOnly = true;
             this.timeLeft.Visible = true;
             this.timeLeft.VisibleIndex = 6;
+            this.timeLeft.Width = 50;
             // 
             // bwtimer
             // 
