@@ -329,23 +329,25 @@
             // 
             // assigncategory
             // 
+            this.assigncategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.assigncategory.Location = new System.Drawing.Point(99, 354);
             this.assigncategory.Name = "assigncategory";
             this.assigncategory.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "assign category to selected", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject4, "", null, null, true),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "delete category", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleCenter, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, "", null, null, true)});
-            this.assigncategory.Size = new System.Drawing.Size(375, 20);
+            this.assigncategory.Size = new System.Drawing.Size(401, 20);
             this.assigncategory.TabIndex = 5;
             this.assigncategory.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.assigncategory_ButtonClick);
             // 
             // filterType
             // 
             this.filterType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.filterType.Location = new System.Drawing.Point(74, 328);
+            this.filterType.Location = new System.Drawing.Point(59, 328);
             this.filterType.Name = "filterType";
             this.filterType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.filterType.Size = new System.Drawing.Size(100, 20);
+            this.filterType.Size = new System.Drawing.Size(115, 20);
             this.filterType.TabIndex = 4;
             this.filterType.ToolTip = "filter type";
             // 
@@ -367,7 +369,7 @@
             this.addfilter.Name = "addfilter";
             this.addfilter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus, "add filter", -1, true, true, false, DevExpress.XtraEditors.ImageLocation.MiddleRight, null, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject6, "", null, null, true)});
-            this.addfilter.Size = new System.Drawing.Size(296, 20);
+            this.addfilter.Size = new System.Drawing.Size(322, 20);
             this.addfilter.TabIndex = 2;
             this.addfilter.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.addfilter_ButtonClick);
             // 
@@ -389,7 +391,7 @@
             this.filtersGridControl.Location = new System.Drawing.Point(2, 2);
             this.filtersGridControl.MainView = this.gridViewFilters;
             this.filtersGridControl.Name = "filtersGridControl";
-            this.filtersGridControl.Size = new System.Drawing.Size(473, 319);
+            this.filtersGridControl.Size = new System.Drawing.Size(499, 319);
             this.filtersGridControl.TabIndex = 0;
             this.filtersGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewFilters});
@@ -505,7 +507,7 @@
             this.bwChartControl.SeriesTemplate.Label = pointSeriesLabel3;
             splineAreaSeriesView3.Transparency = ((byte)(0));
             this.bwChartControl.SeriesTemplate.View = splineAreaSeriesView3;
-            this.bwChartControl.Size = new System.Drawing.Size(471, 314);
+            this.bwChartControl.Size = new System.Drawing.Size(497, 314);
             this.bwChartControl.TabIndex = 1;
             // 
             // panelControl2
