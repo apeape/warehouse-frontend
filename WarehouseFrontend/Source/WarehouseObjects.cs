@@ -20,7 +20,7 @@ namespace WarehouseFrontend
             public FilterType release_filter_type { get; set; }
 
             public bool selected { get; set; }
-            public string type { get; set; }
+            public string type { get { return Enum.GetName(typeof(WarehouseObject.FilterType), release_filter_type); } }
         }
 
         public class SearchResultData

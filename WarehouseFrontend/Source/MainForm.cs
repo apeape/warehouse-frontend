@@ -23,6 +23,9 @@ namespace WarehouseFrontend
 {
     public partial class MainForm : Form
     {
+        public const int bytesToKibibytes = 1024;
+        public const double kibibytesToMegabits = 0.008192;
+
         private bool bwTimerLock = false;
         private JsonRpcProxy warehouse;
         private WarehouseObject.BytesTransferred previousXfer;
@@ -35,8 +38,8 @@ namespace WarehouseFrontend
             public DateTime time;
         }
 
-        private Queue<bwChartValue> dlChart = new Queue<bwChartValue>(25);
-        private Queue<bwChartValue> ulChart = new Queue<bwChartValue>(25);
+        private Queue<bwChartValue> dlChart = new Queue<bwChartValue>();
+        private Queue<bwChartValue> ulChart = new Queue<bwChartValue>();
  
         public MainForm()
         {
@@ -46,11 +49,8 @@ namespace WarehouseFrontend
             Console.Title = "warehouse console";
             Console.WindowHeight = 15;
 
-            foreach (string ft in Enum.GetNames(typeof(WarehouseObject.FilterType)))
-            {
-                filterType.Properties.Items.Add(ft);
-                filterType.SelectedIndex = 0;
-            }
+            filterType.Properties.Items.AddRange(Enum.GetNames(typeof(WarehouseObject.FilterType)));
+            filterType.SelectedIndex = 0;
 
             SafetyWrapper(() =>
             {
@@ -74,11 +74,9 @@ namespace WarehouseFrontend
                                 {
                                     this.BeginInvoke((ThreadStart)delegate() // back to UI thread
                                     {
-                                        foreach (string site in warehouse.siteNames)
-                                        {
-                                            getSiteStatsButton.Properties.Items.Add(site);
-                                            searchsite.Properties.Items.Add(site);
-                                        }
+                                        getSiteStatsButton.Properties.Items.AddRange(warehouse.siteNames);
+                                        searchsite.Properties.Items.AddRange(warehouse.siteNames);
+
                                         getSiteStatsButton.SelectedIndex = 0;
                                         searchsite.SelectedIndex = 0;
                                     });
@@ -121,15 +119,15 @@ namespace WarehouseFrontend
                                 var downloaded = xfer.downloaded - previousXfer.downloaded;
                                 var uploaded = xfer.uploaded - previousXfer.uploaded;
 
-                                var dlSpeed = (downloaded / 1024) / elapsed; // kibibytes/sec
-                                var ulSpeed = (uploaded / 1024) / elapsed; // kibibytes/sec
+                                var dlSpeed = (downloaded / bytesToKibibytes) / elapsed; // kibibytes/sec
+                                var ulSpeed = (uploaded / bytesToKibibytes) / elapsed; // kibibytes/sec
 
 
-                                dlChart.Enqueue(new bwChartValue() { speed = dlSpeed * 0.008192, time = xfer.date }); // megabits/sec
-                                if (dlChart.Count > 25)
+                                dlChart.Enqueue(new bwChartValue() { speed = dlSpeed * kibibytesToMegabits, time = xfer.date }); // megabits/sec
+                                if (dlChart.Count > 45)
                                     dlChart.Dequeue();
-                                ulChart.Enqueue(new bwChartValue() { speed = ulSpeed * 0.008192, time = xfer.date }); // megabits/sec
-                                if (ulChart.Count > 25)
+                                ulChart.Enqueue(new bwChartValue() { speed = ulSpeed * kibibytesToMegabits, time = xfer.date }); // megabits/sec
+                                if (ulChart.Count > 45)
                                     ulChart.Dequeue();
 
                                 if (!closed)
@@ -205,17 +203,13 @@ namespace WarehouseFrontend
                     SafetyWrapper(() =>
                         {
                             var filters = warehouse.ListFilters();
-
                             Console.WriteLine("got " + filters.Count + " filter(s)");
-
-                            foreach (var f in filters)
-                                f.type = Enum.GetName(typeof(WarehouseObject.FilterType), f.release_filter_type);
 
                             if (!closed && filters.Count > 0)
                             {
                                 this.BeginInvoke((ThreadStart)delegate() // back to UI thread
                                 {
-                                    filtersGridControl.DataSource = filters.ToDataTable();
+                                    filtersGridControl.DataSource = filters;
                                 });
                             }
                         });
@@ -224,16 +218,12 @@ namespace WarehouseFrontend
 
         private List<int> getSelectedFilterIndices()
         {
-            var rows = (filtersGridControl.DataSource as DataTable).Rows;
             List<int> indices = new List<int>();
-            foreach (DataRow row in rows)
-            {
-                if ((bool)row["selected"] == true)
-                {
-                    var index = rows.IndexOf(row) + 1;
-                    indices.Add(index);
-                }
-            }
+
+            var filters = (List<WarehouseObject.Filter>)filtersGridControl.DataSource;
+
+            foreach (WarehouseObject.Filter filter in filters)
+                if (filter.selected) indices.Add(filters.IndexOf(filter) + 1);
 
             return indices;
         }
@@ -314,22 +304,16 @@ namespace WarehouseFrontend
             new Thread(delegate() // new thread
             {
                 var siteresults = warehouse.Search(searchButton.Text);
+                List<WarehouseObject.SearchResultData> allresults = new List<WarehouseObject.SearchResultData>();
                 foreach (var sr in siteresults)
                 {
-                    foreach (var r in sr.results)
-                    {
-                        r.site = sr.site;
-                        //r.sizeString = Util.FormatBytes(r.size);
-                    }
+                    sr.results.ForEach(r => r.site = sr.site);
+
+                    allresults.AddRange(sr.results);
                 }
                 this.BeginInvoke((ThreadStart)delegate() // back to UI thread
                 {
-                    var allresults = siteresults[0].results.ToDataTable();
-                    for (int i = 1; i < siteresults.Count; i++)
-                    {
-                        siteresults[i].results.ToDataTable(allresults);
-                    }
-                    Console.WriteLine("got " + allresults.Rows.Count + " results");
+                    Console.WriteLine("got " + allresults.Count + " results");
                     searchResultsGridControl.DataSource = allresults;
                 });
 
@@ -338,12 +322,17 @@ namespace WarehouseFrontend
 
         private void gridViewSearch_RowClick(object sender, DevExpress.XtraGrid.Views.Grid.RowClickEventArgs e)
         {
+            /*
             DataRowView rowView = (DataRowView)gridViewSearch.GetRow(e.RowHandle);
-            //var row = (filtersGridControl.DataSource as DataTable).Rows[e.RowHandle];
             var id = rowView.Row.ItemArray[5].ToString();
             var site = rowView.Row.ItemArray[4].ToString();
             downloadbyid.Text = id;
             searchsite.SelectedIndex = searchsite.Properties.Items.IndexOf(site);
+            */
+
+            var row = (WarehouseObject.SearchResultData)gridViewSearch.GetRow(e.RowHandle);
+            downloadbyid.Text = row.id.ToString();
+            searchsite.SelectedIndex = searchsite.Properties.Items.IndexOf(row.site);
         }
 
         private void getTorrents(bool hideComplete)
@@ -356,15 +345,6 @@ namespace WarehouseFrontend
 
                     Console.WriteLine("got " + torrents.Count + " torrents");
 
-                    /*
-                    foreach (var f in torrents)
-                    {
-                        f.percentDone = (f.bytesDone / f.size) * 100;
-                        f.downloadSpeedKiB = f.downloadSpeed / 1024;
-                        f.uploadSpeedKiB = f.uploadSpeed / 1024;
-                        f.sizeString = Util.FormatBytes(f.size);
-                    }*/
-
                     if (hideComplete)
                     {
                         Console.WriteLine("hiding " + torrents.Count(q => q.percentDone == 100) + " completed torrents");
@@ -375,7 +355,7 @@ namespace WarehouseFrontend
                     {
                         this.BeginInvoke((ThreadStart)delegate() // back to UI thread
                         {
-                            torrentsGridControl.DataSource = torrents.ToDataTable();
+                            torrentsGridControl.DataSource = torrents;
                         });
                     }
                 });
