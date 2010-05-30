@@ -66,29 +66,13 @@ namespace WarehouseFrontend
 
         public bool DownloadTorrentById(string siteName, int id)
         {
-            try
-            {
-                return (bool)client.Invoke("downloadTorrentById", siteName, id);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
+            return (bool)client.Invoke("downloadTorrentById", siteName, id);
         }
 
         public WarehouseObject.SiteStatistics GetSiteStatistics(string siteName)
         {
-            try
-            {
-                var stats = JsonConvert.DeserializeObject<WarehouseObject.SiteStatistics>(((JsonObject)client.Invoke("getSiteStatistics", siteName)).ToString());
-                return (WarehouseObject.SiteStatistics) stats;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
+            var stats = JsonConvert.DeserializeObject<WarehouseObject.SiteStatistics>(((JsonObject)client.Invoke("getSiteStatistics", siteName)).ToString());
+            return (WarehouseObject.SiteStatistics) stats;
         }
 
         public void AssignCategoryToFilters(string category, List<int> filterIndices)
@@ -128,14 +112,7 @@ namespace WarehouseFrontend
 
         public void DeleteFilters(List<int> filterIndices)
         {
-            try
-            {
-                client.Invoke("deleteFilters", filterIndices.ToArray());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            client.Invoke("deleteFilters", filterIndices.ToArray());
         }
 
         public void ClearFilters()

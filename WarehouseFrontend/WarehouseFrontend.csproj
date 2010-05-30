@@ -103,6 +103,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Source\JsonRpcException.cs" />
     <Compile Include="Source\JsonRpcProxy.cs" />
     <Compile Include="Source\MainForm.cs">
       <SubType>Form</SubType>

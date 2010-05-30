@@ -40,10 +40,14 @@ namespace Jelly
 
         public virtual object Invoke(string method, params object[] args)
         {
+            string action = method + "(" + Util.ArrayToStringGeneric(args, ", ") + ") ";
+            //Console.WriteLine(action);
+
             return Util.RetryAction<object>(() =>
                 {
                     WebRequest request = GetWebRequest(new Uri(Url));
                     request.Method = "POST";
+                    request.Timeout = 45000;
 
                     using (Stream stream = request.GetRequestStream())
                     using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
@@ -77,9 +81,9 @@ namespace Jelly
 
                         return answer["result"];
                     }
-                }, 20, 100); // retry with delay
+                }, action, 20, 100); // retry with delay
 
-            throw new Exception(method + "() failed, too many retries");
+            throw new Exception(action + " failed, too many retries");
         }
 
         protected virtual void OnError(object errorObject) 
@@ -87,9 +91,9 @@ namespace Jelly
             JsonObject error = errorObject as JsonObject;
                         
             if (error != null)
-                throw new Exception(error["message"] as string);
-                        
-            throw new Exception(errorObject as string);
+                throw new JsonRpcException(error["message"] as string);
+
+            throw new JsonRpcException(errorObject as string);
         }
     }
 }

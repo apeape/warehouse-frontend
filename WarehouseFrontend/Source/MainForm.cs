@@ -31,8 +31,8 @@ namespace WarehouseFrontend
 
         public class bwChartValue
         {
-            public double speed;
-            public DateTime time;
+            public double speed { get; set; }
+            public DateTime time { get; set; }
         }
 
         private Queue<bwChartValue> dlChart = new Queue<bwChartValue>();
