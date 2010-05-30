@@ -1,8 +1,6 @@
 Integrate the console stuff into a debug console tab inside the main client with a mutex for writing to make it thread safe so there are no longer two windows for the program all the time
 Properly capitalise all the strings throughout the program
 Get rid of all the magic numbers and replace them with appropriate centrally defined constants
-Add a new tab for the XML RPC data from rtorrent (hasn't been finished in the actual warehouse API yet)
-The download/upload graph suffers from timing jitter, I think, this results in irregularities and speeds above 100 Mbit, for example
 
 In general: Add more error handling, in particular for the following fatal conditions:
 
