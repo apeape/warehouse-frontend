@@ -55,7 +55,7 @@ namespace WarehouseFrontend
                 catch (JsonRpcException jre)
                 {
                     if (actionName != null)
-                        Console.WriteLine(actionName + " failed: " + jre.Message);
+                        Console.WriteLine(actionName + "failed: " + jre.Message);
                     else
                         Console.WriteLine("json-rpc call failed: " + jre.Message);
                     throw;
@@ -66,7 +66,7 @@ namespace WarehouseFrontend
                     else
                     {
                         if (actionName != null)
-                            Console.WriteLine(actionName + " failed: " + e.Message + ", retrying...");
+                            Console.WriteLine(actionName + "failed: " + e.Message + ", retrying...");
                         else
                             Console.WriteLine("failed: " + e.Message + ", retrying...");
 

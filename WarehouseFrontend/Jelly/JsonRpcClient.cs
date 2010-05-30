@@ -67,7 +67,7 @@ namespace Jelly
 
                         if (response.StatusCode != HttpStatusCode.OK)
                         {
-                            throw new Exception(method + "() got Bad HTTP response: " + response.StatusCode);
+                            throw new Exception(action + "got Bad HTTP response: " + response.StatusCode);
                         }
                         else
                         {
@@ -83,7 +83,7 @@ namespace Jelly
                     }
                 }, action, 20, 100); // retry with delay
 
-            throw new Exception(action + " failed, too many retries");
+            throw new Exception(action + "failed, too many retries");
         }
 
         protected virtual void OnError(object errorObject) 
