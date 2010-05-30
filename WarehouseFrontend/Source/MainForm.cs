@@ -23,9 +23,6 @@ namespace WarehouseFrontend
 {
     public partial class MainForm : Form
     {
-        public const int bytesToKibibytes = 1024;
-        public const double kibibytesToMegabits = 0.008192;
-
         private bool bwTimerLock = false;
         private JsonRpcProxy warehouse;
         private WarehouseObject.BytesTransferred previousXfer;
@@ -119,14 +116,14 @@ namespace WarehouseFrontend
                                 var downloaded = xfer.downloaded - previousXfer.downloaded;
                                 var uploaded = xfer.uploaded - previousXfer.uploaded;
 
-                                var dlSpeed = (downloaded / bytesToKibibytes) / elapsed; // kibibytes/sec
-                                var ulSpeed = (uploaded / bytesToKibibytes) / elapsed; // kibibytes/sec
+                                var dlSpeed = (downloaded / Util.bytesToKibibytes) / elapsed; // kibibytes/sec
+                                var ulSpeed = (uploaded / Util.bytesToKibibytes) / elapsed; // kibibytes/sec
 
 
-                                dlChart.Enqueue(new bwChartValue() { speed = dlSpeed * kibibytesToMegabits, time = xfer.date }); // megabits/sec
+                                dlChart.Enqueue(new bwChartValue() { speed = dlSpeed / Util.kibibytesToMegabits, time = xfer.date }); // megabits/sec
                                 if (dlChart.Count > 45)
                                     dlChart.Dequeue();
-                                ulChart.Enqueue(new bwChartValue() { speed = ulSpeed * kibibytesToMegabits, time = xfer.date }); // megabits/sec
+                                ulChart.Enqueue(new bwChartValue() { speed = ulSpeed / Util.kibibytesToMegabits, time = xfer.date }); // megabits/sec
                                 if (ulChart.Count > 45)
                                     ulChart.Dequeue();
 
@@ -322,14 +319,6 @@ namespace WarehouseFrontend
 
         private void gridViewSearch_RowClick(object sender, DevExpress.XtraGrid.Views.Grid.RowClickEventArgs e)
         {
-            /*
-            DataRowView rowView = (DataRowView)gridViewSearch.GetRow(e.RowHandle);
-            var id = rowView.Row.ItemArray[5].ToString();
-            var site = rowView.Row.ItemArray[4].ToString();
-            downloadbyid.Text = id;
-            searchsite.SelectedIndex = searchsite.Properties.Items.IndexOf(site);
-            */
-
             var row = (WarehouseObject.SearchResultData)gridViewSearch.GetRow(e.RowHandle);
             downloadbyid.Text = row.id.ToString();
             searchsite.SelectedIndex = searchsite.Properties.Items.IndexOf(row.site);

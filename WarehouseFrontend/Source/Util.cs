@@ -8,6 +8,9 @@ namespace WarehouseFrontend
 {
     public static class Util
     {
+        public const int bytesToKibibytes = 1024;
+        public const double kibibytesToMegabits = 128;
+
         public static string FormatBytes(long bytes)
         {
             const int scale = 1024;

@@ -70,8 +70,8 @@ namespace WarehouseFrontend
 
             public double percentDone { get { return Math.Round(((double)bytesDone / (double)size) * 100, 1); } }
             public string sizeString { get { return Util.FormatBytes(size); } }
-            public double downloadSpeedKiB { get { return Math.Round((double)downloadSpeed / 1024, 0); } }
-            public double uploadSpeedKiB { get { return Math.Round((double)uploadSpeed / 1024, 0); } }
+            public double downloadSpeedKiB { get { return Math.Round((double)downloadSpeed / Util.bytesToKibibytes, 0); } }
+            public double uploadSpeedKiB { get { return Math.Round((double)uploadSpeed / Util.bytesToKibibytes, 0); } }
             public TimeSpan timeLeft { get { return downloadSpeed == 0 ? TimeSpan.Zero : TimeSpan.FromSeconds((size - bytesDone) / downloadSpeed);} }
         }
     }
