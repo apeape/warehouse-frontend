@@ -321,7 +321,7 @@ namespace WarehouseFrontend
             new Thread(delegate() // new thread
             {
                 var siteresults = warehouse.Search(searchButton.Text);
-                List<WarehouseObject.SearchResultData> allresults = new List<WarehouseObject.SearchResultData>();
+                List<WarehouseObject.ReleaseData> allresults = new List<WarehouseObject.ReleaseData>();
                 foreach (var sr in siteresults)
                 {
                     sr.results.ForEach(r => r.site = sr.site);
@@ -339,7 +339,7 @@ namespace WarehouseFrontend
 
         private void gridViewSearch_RowClick(object sender, DevExpress.XtraGrid.Views.Grid.RowClickEventArgs e)
         {
-            var row = (WarehouseObject.SearchResultData)gridViewSearch.GetRow(e.RowHandle);
+            var row = (WarehouseObject.ReleaseData)gridViewSearch.GetRow(e.RowHandle);
             downloadbyid.Text = row.id.ToString();
             searchsite.SelectedIndex = searchsite.Properties.Items.IndexOf(row.site);
         }

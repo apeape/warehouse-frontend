@@ -112,6 +112,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\NotificationClient.cs" />
+    <Compile Include="Source\NotificationMessage.cs" />
     <Compile Include="Source\Program.cs" />
     <Compile Include="Source\Util.cs" />
     <Compile Include="Source\WarehouseObjects.cs" />

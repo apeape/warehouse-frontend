@@ -23,7 +23,7 @@ namespace WarehouseFrontend
             public string type { get { return Enum.GetName(typeof(WarehouseObject.FilterType), release_filter_type); } }
         }
 
-        public class SearchResultData
+        public class ReleaseData
         {
             public string name { get; set; }
             public string section { get; set; }
@@ -40,7 +40,7 @@ namespace WarehouseFrontend
         public class SearchResult
         {
             public string site { get; set; }
-            public List<SearchResultData> results { get; set; }
+            public List<ReleaseData> results { get; set; }
         }
 
         public class BytesTransferred
