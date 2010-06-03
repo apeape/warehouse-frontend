@@ -26,6 +26,7 @@ namespace WarehouseFrontend
         private bool bwTimerLock = false;
         private JsonRpcProxy warehouse;
         private WarehouseObject.BytesTransferred previousXfer;
+        private NotificationClient notificationClient;
 
         public bool closed = false;
 
@@ -37,6 +38,10 @@ namespace WarehouseFrontend
 
         private Queue<bwChartValue> dlChart = new Queue<bwChartValue>();
         private Queue<bwChartValue> ulChart = new Queue<bwChartValue>();
+
+        const string JsonRpcUrlFilename = "JsonRpcServiceUrl.txt";
+        const string NotificationServiceFilename = "NotificationService.txt";
+        const string sslCertFilename = "ssl.pfx";
  
         public MainForm()
         {
@@ -51,11 +56,26 @@ namespace WarehouseFrontend
 
             SafetyWrapper(() =>
             {
-                string url = File.ReadAllText("JsonRpcServiceUrl.txt");
-                warehouse = new JsonRpcProxy(url, "ssl.pfx");
+                string url = File.ReadAllText(JsonRpcUrlFilename);
+                warehouse = new JsonRpcProxy(url, sslCertFilename);
 
                 if (warehouse == null)
                     throw new Exception("something went horribly wrong");
+
+                string[] notificationServer = File.ReadAllText(NotificationServiceFilename).Split(':');
+                
+                string notificationServerAddress = notificationServer[0];
+                int notificationServerPort = Int32.Parse(notificationServer[1]);
+
+                notificationClient = new NotificationClient(notificationServerAddress, notificationServerPort, sslCertFilename);
+
+                new Thread(delegate() // new thread
+                    {
+                        SafetyWrapper(() =>
+                        {
+                            notificationClient.Connect();
+                        });
+                    }).Start();
 
                 new Thread(delegate() // new thread
                     {
