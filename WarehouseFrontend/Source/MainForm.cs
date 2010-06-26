@@ -50,6 +50,7 @@ namespace WarehouseFrontend
 
             Console.Title = "warehouse console";
             Console.WindowHeight = 15;
+            Console.CursorVisible = false;
 
             filterType.Properties.Items.AddRange(Enum.GetNames(typeof(WarehouseObject.FilterType)));
             filterType.SelectedIndex = 0;
@@ -67,6 +68,7 @@ namespace WarehouseFrontend
                 string notificationServerAddress = notificationServer[0];
                 int notificationServerPort = Int32.Parse(notificationServer[1]);
 
+                /*
                 notificationClient = new NotificationClient(notificationServerAddress, notificationServerPort, sslCertFilename);
 
                 new Thread(delegate() // new thread
@@ -76,6 +78,7 @@ namespace WarehouseFrontend
                             notificationClient.Connect();
                         });
                     }).Start();
+                */
 
                 new Thread(delegate() // new thread
                     {
@@ -296,22 +299,24 @@ namespace WarehouseFrontend
                 }
                 else
                 {
-                    int id;
-                    if (!int.TryParse(downloadbyid.Text, out id))
-                    {
-                        Console.WriteLine(downloadbyid.Text + " is not an int :(");
-                    }
-                    else if (warehouse.DownloadTorrentById(searchsite.Text, int.Parse(downloadbyid.Text)))
-                    {
-                        Console.WriteLine("successfully queued " + searchsite.Text + " " + downloadbyid.Text);
-                        this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                    SafetyWrapper(() =>
                         {
-                            downloadbyid.Text = "";
+                            int id;
+                            if (!int.TryParse(downloadbyid.Text, out id))
+                            {
+                                Console.WriteLine(downloadbyid.Text + " is not an int :(");
+                            }
+                            else if (warehouse.DownloadTorrentById(searchsite.Text, int.Parse(downloadbyid.Text)))
+                            {
+                                Console.WriteLine("successfully queued " + searchsite.Text + " " + downloadbyid.Text);
+                                this.BeginInvoke((ThreadStart)delegate() // back to UI thread
+                                {
+                                    downloadbyid.Text = "";
+                                });
+                            }
+                            else
+                                Console.WriteLine("release not found");
                         });
-                    }
-                    else
-                        Console.WriteLine("release not found");
-                    
                 }
             }).Start();
         }

@@ -11,6 +11,8 @@ using System.Collections;
 using Newtonsoft.Json.Converters;
 using System.IO;
 using System.Windows.Forms;
+using System.Net;
+using System.Net.Security;
 
 namespace WarehouseFrontend
 {
@@ -21,6 +23,16 @@ namespace WarehouseFrontend
 
         public JsonRpcProxy(string url, string sslCertFile)
         {
+            ServicePointManager.ServerCertificateValidationCallback +=
+            delegate(
+                object sender,
+                X509Certificate certificate,
+                X509Chain chain,
+                SslPolicyErrors sslPolicyErrors)
+            {
+                return true;
+            };
+
             InstallCertificate(sslCertFile);
 
             client.Url = url;
