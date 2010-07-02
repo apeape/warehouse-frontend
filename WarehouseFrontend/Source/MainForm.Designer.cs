@@ -102,6 +102,7 @@
             this.torrentSize = new DevExpress.XtraGrid.Columns.GridColumn();
             this.percentDone = new DevExpress.XtraGrid.Columns.GridColumn();
             this.timeLeft = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.notificationsTabPage = new DevExpress.XtraTab.XtraTabPage();
             this.defaultLookAndFeel1 = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
             this.bwtimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
@@ -159,7 +160,8 @@
             this.searchtabpage,
             this.filterstabpage,
             this.statsTabPage,
-            this.rtorrentTabPage});
+            this.rtorrentTabPage,
+            this.notificationsTabPage});
             // 
             // searchtabpage
             // 
@@ -805,6 +807,13 @@
             this.timeLeft.VisibleIndex = 6;
             this.timeLeft.Width = 50;
             // 
+            // notificationsTabPage
+            // 
+            this.notificationsTabPage.Image = global::WarehouseFrontend.Properties.Resources._new;
+            this.notificationsTabPage.Name = "notificationsTabPage";
+            this.notificationsTabPage.Size = new System.Drawing.Size(503, 380);
+            this.notificationsTabPage.Text = "notifications";
+            // 
             // bwtimer
             // 
             this.bwtimer.Interval = 2000;
@@ -925,6 +934,7 @@
         private DevExpress.XtraEditors.CheckEdit hidecompleted;
         private DevExpress.XtraGrid.Columns.GridColumn timeLeft;
         private DevExpress.XtraGrid.Columns.GridColumn seeds;
+        private DevExpress.XtraTab.XtraTabPage notificationsTabPage;
     }
 }
 

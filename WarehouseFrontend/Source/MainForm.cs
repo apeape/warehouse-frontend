@@ -68,7 +68,7 @@ namespace WarehouseFrontend
                 string notificationServerAddress = notificationServer[0];
                 int notificationServerPort = Int32.Parse(notificationServer[1]);
 
-                /*
+                
                 notificationClient = new NotificationClient(notificationServerAddress, notificationServerPort, sslCertFilename);
 
                 new Thread(delegate() // new thread
@@ -78,7 +78,7 @@ namespace WarehouseFrontend
                             notificationClient.Connect();
                         });
                     }).Start();
-                */
+                
 
                 new Thread(delegate() // new thread
                     {

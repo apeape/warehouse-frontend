@@ -60,6 +60,13 @@ namespace WarehouseFrontend.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap _new {
+            get {
+                object obj = ResourceManager.GetObject("_new", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap bullet_feed {
             get {
                 object obj = ResourceManager.GetObject("bullet_feed", resourceCulture);

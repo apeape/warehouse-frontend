@@ -23,15 +23,17 @@ namespace WarehouseFrontend
             newNotificationResults,
             oldNotificationResults,
             notificationCount,
-            error
+            error,
+            test,
         }
 
         public class NotificationData
         {
-            [JsonConverter(typeof(IsoDateTimeConverter))]
-            public DateTime time { get; set; }
-            public string type { get; set; }
-            public object content { get; set; }
+            //[JsonConverter(typeof(IsoDateTimeConverter))]
+            public double time { get; set; }
+            [JsonConverter(typeof(StringEnumConverter))]
+            public Type type { get; set; }
+            public string content { get; set; }
         }
 
         public class Notification
@@ -66,6 +68,9 @@ namespace WarehouseFrontend
 
         public class JsonData
         {
+            [JsonIgnore]
+            public string error { get; set; }
+            //public int id { get; set; }
             [JsonConverter(typeof(StringEnumConverter))]
             public Type type { get; set; }
             public JObject data { get; set; }

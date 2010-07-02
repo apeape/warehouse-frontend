@@ -96,6 +96,8 @@ namespace WarehouseFrontend
 
             sslStream.BeginRead(recvBuf, 0, recvBuf.Length, new AsyncCallback(Receive), this);
 
+            //generateNotification(NotificationMessage.Type.test, "Test.Notification-Wut");
+
             return true;
         }
 
@@ -114,15 +116,16 @@ namespace WarehouseFrontend
             Invoke("getOldNotifications", first, last);
         }
 
-        public void generateNotification(NotificationMessage.NotificationData notification)
+        public void generateNotification(NotificationMessage.Type type, string content)
         {
-            Invoke("generateNotification", notification);
+            Invoke("generateNotification", Enum.GetName(typeof(NotificationMessage.Type), type), content);
         }
 
         public void Send(object message)
         {
             string serializedMsg = JsonConvert.SerializeObject(message);
-            byte[] buf = Encoding.UTF8.GetBytes(serializedMsg.Length + ':' + serializedMsg);
+            //Console.WriteLine(JsonConvert.SerializeObject(message, Formatting.Indented));
+            byte[] buf = Encoding.UTF8.GetBytes(serializedMsg.Length + ":" + serializedMsg);
             sslStream.Write(buf);
             sslStream.Flush();
         }
@@ -143,7 +146,7 @@ namespace WarehouseFrontend
                     // try to parse length
                     if (int.TryParse(buffer.Substring(0, buffer.IndexOf(':')), out msgLen))
                     {
-                        buffer = buffer.Substring(buffer.IndexOf(':')); // trim length from received string
+                        buffer = buffer.Substring(buffer.IndexOf(':') + 1); // trim length from received string
                         recvStringBuffer = new StringBuilder(buffer);
                     }
                     else // this shouldn't happen
@@ -159,17 +162,33 @@ namespace WarehouseFrontend
                     msgLen = 0;
 
                     // handle message
-                    var msgObj = JsonConvert.DeserializeObject<NotificationMessage.JsonData>(msg);
+                    //var msgObj = JsonConvert.DeserializeObject<NotificationMessage.JsonData>(msg);
+                    //var msgObj = JsonConvert.DeserializeObject<JObject>(msg);
+                    var msgObj = JObject.Parse(msg);
 
-                    // find the message handler method for this message type
-                    var handler = messageHandlers[(NotificationMessage.Type)msgObj.type];
-
-                    if (handler != null)
+                    if (msgObj["error"] == null && msgObj["type"].Type != JTokenType.Null)
                     {
-                        Console.WriteLine("received notification message: " + Enum.GetName(typeof(NotificationMessage.Type), msgObj.type));
-                        Console.WriteLine(msgObj.data);
-                        // invoke it
-                        handler.Invoke(this, new object[] { msgObj.data });
+                        var type = (NotificationMessage.Type)Enum.Parse(typeof(NotificationMessage.Type), (string)msgObj["type"], true);
+
+                        // find the message handler method for this message type
+                        var handler = messageHandlers.SingleOrDefault(q => q.Key == type).Value;
+
+                        if (handler != null)
+                        {
+                            Console.WriteLine("received notification message: " + msgObj["type"]);
+                            if (msgObj["data"].Type != JTokenType.Null)
+                            {
+                                //Console.WriteLine(msgObj["data"]);
+                                // invoke it
+                                handler.Invoke(this, new object[] { JsonConvert.SerializeObject(msgObj["data"]) });
+                            }
+                        }
+                        else
+                            Console.WriteLine("received unknown notification message type: " + msgObj["type"]);
+                    }
+                    else if (msgObj["error"].Type != JTokenType.Null) // error
+                    {
+                        Console.WriteLine("error: " + msgObj["error"]);
                     }
                 }
             }
@@ -183,7 +202,11 @@ namespace WarehouseFrontend
             JObject callData = new JObject();
             callData.Add(new JProperty("id", ++rpcId));
             callData.Add(new JProperty("method", method));
-            callData.Add(new JProperty("params", args));
+            callData.Add("params", JToken.FromObject(args));
+
+            //JObject rpc = new JObject();
+            //rpc.Add(new JProperty("type", NotificationMessage.Type.rpc));
+            //rpc.Add(new JProperty("data", callData));
 
             NotificationMessage.JsonData call = new NotificationMessage.JsonData(NotificationMessage.Type.rpc, callData);
 
@@ -205,43 +228,53 @@ namespace WarehouseFrontend
         }
 
         [MessageHandler(NotificationMessage.Type.downloaded)]
-        public void HandleDownloaded(WarehouseObject.ReleaseData release)
+        public void HandleDownloaded(string data)
         {
+            var release = JsonConvert.DeserializeObject<WarehouseObject.ReleaseData>(data);
         }
 
         [MessageHandler(NotificationMessage.Type.downloadError)]
-        public void HandleDownloadError(NotificationMessage.DownloadError downloadError)
+        public void HandleDownloadError(string data)
         {
+            var downloadError = JsonConvert.DeserializeObject<NotificationMessage.DownloadError>(data);
         }
 
         [MessageHandler(NotificationMessage.Type.downloadDeleted)]
-        public void HandleDownloadDeleted(WarehouseObject.ReleaseData release)
+        public void HandleDownloadDeleted(string data)
         {
+            var release = JsonConvert.DeserializeObject<WarehouseObject.ReleaseData>(data);
         }
 
         [MessageHandler(NotificationMessage.Type.serviceMessage)]
-        public void HandleServiceMessage(NotificationMessage.ServiceMessage serviceMessage)
+        public void HandleServiceMessage(string data)
         {
+            var serviceMessage = JsonConvert.DeserializeObject<NotificationMessage.ServiceMessage>(data);
         }
 
         [MessageHandler(NotificationMessage.Type.notification)]
-        public void HandleNotification(NotificationMessage.NotificationData notification)
+        public void HandleNotification(string data)
         {
+            var notification = JsonConvert.DeserializeObject<NotificationMessage.NotificationData>(data);
+            var date = Util.UnixTimeStampToDateTime(notification.time);
+            Console.WriteLine(date + ": (" + notification.type + ") " + notification.content);
         }
 
         [MessageHandler(NotificationMessage.Type.notificationCount)]
-        public void HandleNotificationCount(int count)
+        public void HandleNotificationCount(string data)
         {
+            int count = Int32.Parse(data);
         }
 
         [MessageHandler(NotificationMessage.Type.newNotificationResults)]
-        public void HandleNewNotificationResults(List<NotificationMessage.NotificationData> newNotifications)
+        public void HandleNewNotificationResults(string data)
         {
+            var newNotifications = JsonConvert.DeserializeObject<List<NotificationMessage.NotificationData>>(data);
         }
 
         [MessageHandler(NotificationMessage.Type.oldNotificationResults)]
-        public void HandleOldNotificationResults(List<NotificationMessage.NotificationData> oldNotifications)
+        public void HandleOldNotificationResults(string data)
         {
+            var oldNotifications = JsonConvert.DeserializeObject<List<NotificationMessage.NotificationData>>(data);
         }
 
         #endregion
